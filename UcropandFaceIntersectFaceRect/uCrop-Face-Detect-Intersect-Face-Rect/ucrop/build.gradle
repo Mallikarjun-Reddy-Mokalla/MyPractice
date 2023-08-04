@@ -1,0 +1,59 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+ext {
+    PUBLISH_GROUP_ID = 'com.github.krokyze'
+    PUBLISH_VERSION = '2.2.8'
+    PUBLISH_ARTIFACT_ID = 'ucropnedit'
+}
+
+android {
+    compileSdkVersion 31
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 31
+        versionCode 26
+        versionName PUBLISH_VERSION
+
+        vectorDrawables.useSupportLibrary = true
+
+        renderscriptTargetApi 18
+        renderscriptSupportModeEnabled true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            consumerProguardFiles 'proguard-consumer-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    lintOptions {
+        abortOnError false
+    }
+
+    resourcePrefix 'ucrop_'
+
+    sourceSets.main {
+        jni.srcDirs = []
+    }
+
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "androidx.appcompat:appcompat:${androidx_appcompat_version}"
+    implementation "androidx.exifinterface:exifinterface:${androidx_exifinterface_version}"
+    implementation "androidx.transition:transition:${androidx_transition_version}"
+    // OkHttp3 versions above 3.12.x don't support pre-Lollipop Android versions (API 21)
+    implementation "com.squareup.okhttp3:okhttp:3.12.13"
+
+    implementation 'com.google.android.gms:play-services-mlkit-face-detection:17.1.0'
+    implementation 'com.google.android.material:material:1.6.0'
+ }
+
+apply from: 'publish.gradle'

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/rounded_corners"
+    android:orientation="vertical"
+
+    tools:ignore="ResourceName">
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_width="50dp"
+        android:layout_height="3dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="4dp"
+        android:background="@color/ucrop_color_black" />
+
+    <ImageView
+        android:id="@+id/exit_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/view_line"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:padding="5dp"
+        android:src="@drawable/ucrop_close" />
+
+    <TextView
+        android:id="@+id/pop_sheet_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view_line"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
+        android:gravity="center"
+        android:paddingBottom="100dp"
+        android:text="No Faces Found"
+        android:textColor="@color/ucrop_color_black"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>

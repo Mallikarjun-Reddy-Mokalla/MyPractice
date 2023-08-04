@@ -1,0 +1,74 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    if (project.plugins.findPlugin("com.android.library")) {
+        from android.sourceSets.main.java.srcDirs
+        from android.sourceSets.main.kotlin.srcDirs
+    } else {
+        from sourceSets.main.java.srcDirs
+        from sourceSets.main.kotlin.srcDirs
+    }
+}
+
+artifacts {
+    archives androidSourcesJar
+}
+
+group = PUBLISH_GROUP_ID
+version = PUBLISH_VERSION
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                groupId PUBLISH_GROUP_ID
+                artifactId PUBLISH_ARTIFACT_ID
+                version PUBLISH_VERSION
+
+                if (project.plugins.findPlugin("com.android.library")) {
+                    from components.release
+                } else {
+                    from components.java
+                }
+
+                artifact androidSourcesJar
+
+                pom {
+                    name = PUBLISH_ARTIFACT_ID
+                    description = 'Image Cropping + Editing Library for Android'
+                    url = 'https://github.com/krokyze/uCrop-n-Edit'
+
+                    licenses {
+                        license {
+                            name = 'uCrop\'n\'Edit License'
+                            url = 'https://github.com/krokyze/uCrop-n-Edit#license'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            name = 'Martin Anderson'
+                            email = 'martins.andersons@hotmail.com'
+                        }
+                    }
+
+                    scm {
+                        connection = 'scm:git:github.com/krokyze/uCrop-n-Edit.git'
+                        developerConnection = 'scm:git:ssh://github.com/krokyze/uCrop-n-Edit.git'
+                        url = 'https://github.com/krokyze/uCrop-n-Edit/tree/master'
+                    }
+                }
+            }
+        }
+    }
+}
+
+signing {
+    useInMemoryPgpKeys(
+            rootProject.ext["signing.key"],
+            rootProject.ext["signing.password"],
+    )
+    sign publishing.publications
+}
