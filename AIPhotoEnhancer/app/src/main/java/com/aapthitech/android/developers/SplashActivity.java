@@ -2,13 +2,13 @@ package com.aapthitech.android.developers;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.aapthitech.android.developers.Activities.MainActivity;
 import com.aapthitech.android.developers.databinding.ActivitySplashBinding;
 
 public class SplashActivity extends AppCompatActivity {

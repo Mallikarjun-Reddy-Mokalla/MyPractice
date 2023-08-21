@@ -7,4 +7,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+        <color name="seekbar_background_color">#3498DF</color>
+        <color name="custom_progress_color">#00619E</color>
+        <color name="custom_thumb_color">#3898DC</color>
+    <color name="light_gray">#464646</color>
+
+
 </resources>

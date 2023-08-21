@@ -8,6 +8,14 @@
     android:background="@drawable/ai_screen_bg"
     tools:context=".SplashActivity">
 
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:src="@drawable/splash_icom" />
+
     <TextView
         android:id="@+id/start"
         android:layout_width="wrap_content"
@@ -16,9 +24,9 @@
         android:layout_centerInParent="true"
         android:layout_marginBottom="75dp"
         android:text="Start"
-        android:textStyle="bold"
         android:textColor="@color/white"
-        android:textSize="36dp" />
+        android:textSize="36dp"
+        android:textStyle="bold" />
 
 
 </RelativeLayout>

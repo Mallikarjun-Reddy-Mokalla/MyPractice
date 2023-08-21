@@ -16,8 +16,10 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewParent;
 
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 
 import com.aapthitech.android.developers.R;
 
@@ -41,6 +43,7 @@ public class ContentView extends View {
     private float textSize = 30f;
     private float textBottomSize = 32f;
     private int bitmapHeight, bitmapWidth;
+    private CardView parentCardView;
 
     public ContentView(Context context) {
         super(context);
@@ -64,7 +67,14 @@ public class ContentView extends View {
         textPaintButton.setColor(Color.WHITE);
         textPaintButton.setTextSize(textBottomSize);
         textPaintButton.setTypeface(Typeface.create(fontFamily, fontStyle));
+
+
+
     }
+    public void setParentCardView(CardView cardView) {
+        parentCardView = cardView;
+    }
+
 
     public ContentView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -220,8 +230,8 @@ public class ContentView extends View {
     private void drawDirectionIcon(Canvas canvas) {
      /*   int iconWidth = directionIcon.getIntrinsicWidth();
         int iconHeight = directionIcon.getIntrinsicHeight();*/
-        int iconWidth = 50;
-        int iconHeight = 50;
+        int iconWidth = 60;
+        int iconHeight = 60;
         int iconLeft = (int) (linePosition - iconWidth / 2f);
         int iconTop = beforeImage.getHeight() / 2 - iconHeight / 2;
 
@@ -241,7 +251,7 @@ public class ContentView extends View {
          invalidate();
          return true;
      }*/
-  /*  @Override
+     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -256,36 +266,16 @@ public class ContentView extends View {
                     float newX = Math.max(0, Math.min(event.getX(), getWidth()));
                     progress = newX / getWidth();
                     linePosition = newX;
+
+
                     invalidate();
                 }
                 break;
             case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                isDragging = false;
-                invalidate();
-                break;
-        }
-        return true;
-    }*/
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                Rect iconBounds = directionIcon.getBounds();
-                if (iconBounds.contains((int) event.getX(), (int) event.getY())) {
-                    isDragging = true;
+                if (parentCardView != null) {
+                    parentCardView.performClick(); // Trigger click on the CardView
                 }
                 break;
-            case MotionEvent.ACTION_MOVE:
-                if (isDragging) {
-                    // Calculate the new position while clamping within view bounds
-                    float newX = Math.max(0, Math.min(event.getX(), getWidth()));
-                    progress = newX / getWidth();
-                    linePosition = newX;
-                    invalidate();
-                }
-                break;
-            case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 isDragging = false;
                 invalidate();
