@@ -37,4 +37,35 @@
     <string name="ai_photo_pro">AI PHOTO PRO</string>
     <string name="enhance_and_upscale_image_upto_3x">Enhance and upscale image upto 3X</string>
     <string name="go_premium">Go Premium</string>
+    <string name="do_you_want_to_exit_app">Do you want to Exit app?</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="permission_request">Permission request.</string>
+    <string name="permission_request_msg">With out permission app won\'t work properly.</string>
+
+    <string name="ad_attribution">Ad</string>
+
+    <!-- TEST AD'S eCPM FLORING -->
+    <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
+
+    <!--interstial Ad id floring-->
+    <string name="interstitial_high">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="interstitial_mid">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="interstitial_all">ca-app-pub-3940256099942544/1033173712</string>
+
+    <!--native floring ad ids -->
+
+    <string name="native_high">ca-app-pub-3940256099942544/2247696110</string>
+    <string name="native_mid">ca-app-pub-3940256099942544/2247696110</string>
+    <string name="native_all">ca-app-pub-3940256099942544/2247696110</string>
+
+    <!--banner ad id florig-->
+
+    <string name="banner_high">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_mid">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_all">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="server_not_found">Server Not Found</string>
+
+    <!--END OF TEST ADS -->
+
 </resources>

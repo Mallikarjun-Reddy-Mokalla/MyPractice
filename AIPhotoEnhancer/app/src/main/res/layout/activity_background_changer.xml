@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BackgroundChanger">
+
+
+    <RelativeLayout
+        android:id="@+id/app_bar_lay_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="-1dp"
+        android:padding="0dp">
+
+        <RelativeLayout
+            android:id="@+id/app_bar"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@color/black"
+            android:paddingLeft="30dp"
+            android:paddingTop="40dp"
+            android:paddingRight="30dp"
+            android:paddingBottom="40dp">
+
+            <ImageView
+                android:id="@+id/on_back"
+                android:layout_width="32dp"
+
+                android:layout_height="32dp"
+                android:src="@drawable/ai_back_arrow"
+                app:tint="@color/white" />
+
+            <TextView
+                android:id="@+id/title_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/poppins_bold"
+                android:text=" "
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+
+        </RelativeLayout>
+
+
+
+        <LinearLayout
+            android:id="@+id/user_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/app_bar"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0.0dip"
+                    android:layout_height="0.0dip"
+                    android:layout_margin="5dp"
+                    app:cardCornerRadius="5dp"
+                    app:cardElevation="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <RelativeLayout
+                        android:id="@+id/mainLayout"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
+
+                        <ImageView
+                            android:id="@+id/backgroundImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ai_transparent_bg"
+                            android:scaleType="fitCenter" />
+
+                        <ImageView
+                            android:id="@+id/userImageBC"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitXY" />
+
+                    </RelativeLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_enchance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/black"
+            android:padding="10dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/pro_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="18dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button_gradient"
+                        android:orientation="vertical"
+                        android:padding="5dp">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ai_pro_crown" />
+
+                            <TextView
+                                android:id="@+id/pro_tag_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginStart="10dp"
+                                android:fontFamily="@font/custom_thin"
+                                android:text=""
+                                android:textColor="@color/white"
+                                android:textSize="20sp" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:fontFamily="@font/custom_thin"
+                            android:text="Better Effect &amp; No ads"
+
+                            android:textColor="@color/white"
+                            android:textSize="15sp" />
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/ads_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/pro_card"
+                    android:layout_marginTop="15dp"
+                    app:cardCornerRadius="18dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="5dp">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="horizontal">
+
+
+                            <TextView
+                                android:id="@+id/effect_type"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:fontFamily="@font/custom_thin"
+                                android:text="Enhance"
+                                android:textColor="@color/black"
+                                android:textSize="20sp" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:fontFamily="@font/custom_thin"
+                            android:text="Watch Ads "
+
+                            android:textColor="@color/light_gray"
+                            android:textSize="15sp" />
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <include
+        android:id="@+id/next_lay_save"
+        layout="@layout/save_layout"
+        android:visibility="gone" />
+</RelativeLayout>

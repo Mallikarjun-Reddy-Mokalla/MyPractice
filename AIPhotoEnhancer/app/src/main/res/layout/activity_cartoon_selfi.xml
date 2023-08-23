@@ -47,11 +47,56 @@
 
         </RelativeLayout>
 
-        <FrameLayout
-            android:id="@+id/content_frame"
-            android:layout_width="match_parent"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/app_bar" />
+            android:layout_below="@+id/app_bar"
+            android:layout_centerHorizontal="true">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="0.0dip"
+                android:layout_height="0.0dip"
+                android:layout_margin="5dp"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <RelativeLayout
+                    android:id="@+id/main_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <ImageView
+                        android:id="@+id/background_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitCenter" />
+
+                    <ImageView
+                        android:id="@+id/userImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY" />
+
+                    <ImageView
+                        android:id="@+id/compare_icon"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp" />
+
+                </RelativeLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <RelativeLayout
             android:id="@+id/cartoon_lay"
@@ -175,9 +220,9 @@
                 <HorizontalScrollView
                     android:id="@+id/cartoons_list_lay"
                     android:layout_width="wrap_content"
-                    android:visibility="gone"
+                    android:layout_height="wrap_content"
                     android:scrollbarSize="0dp"
-                    android:layout_height="wrap_content">
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -274,6 +319,7 @@
                         </TextView>
                     </androidx.cardview.widget.CardView>
                 </RelativeLayout>
+
                 <LinearLayout
                     android:id="@+id/magic_save_tools_lay"
                     android:layout_width="match_parent"
