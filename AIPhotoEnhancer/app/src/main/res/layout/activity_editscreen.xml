@@ -4,19 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_gray"
-    tools:context=".Activities.AIEditor">
-
+    tools:context=".Editscreen">
 
     <RelativeLayout
-        android:id="@+id/app_bar_lay"
+        android:id="@+id/app_bar_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:padding="0dp">
 
         <RelativeLayout
-            android:id="@+id/app_bar"
+            android:id="@+id/app_bar_editor"
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,7 +34,7 @@
                 app:tint="@color/white" />
 
             <TextView
-                android:id="@+id/title_type"
+                android:id="@+id/edit_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -49,12 +47,13 @@
         </RelativeLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/edit_view_lay"
             android:layout_width="fill_parent"
-            android:id="@+id/view_lay"
+            android:layout_above="@+id/layout_enchance"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/app_bar"
-            android:layout_margin="5dp"
-            android:layout_centerHorizontal="true">
+            android:layout_below="@+id/app_bar_editor"
+             android:layout_centerHorizontal="true"
+            android:layout_margin="5dp">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="0.0dip"
@@ -69,7 +68,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <RelativeLayout
-                    android:id="@+id/main_layout"
+                    android:id="@+id/main_layout_edit"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent">
 
@@ -80,7 +79,7 @@
                         android:scaleType="fitCenter" />
 
                     <ImageView
-                        android:id="@+id/userImageEditor"
+                        android:id="@+id/userImageEdit"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="fitXY" />
@@ -166,7 +165,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/ads_card_En"
+                    android:id="@+id/edit_with_ads"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/pro_card"
@@ -216,7 +215,7 @@
     </RelativeLayout>
 
     <include
-        android:id="@+id/next_lay_edit"
+        android:id="@+id/next_save"
         layout="@layout/save_layout"
         android:visibility="gone" />
 </RelativeLayout>

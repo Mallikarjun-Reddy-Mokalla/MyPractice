@@ -78,6 +78,8 @@
         </LinearLayout>
 
         <FrameLayout
+            android:layout_marginTop="10dp"
+            android:id="@+id/native_on_exit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="175dp" />

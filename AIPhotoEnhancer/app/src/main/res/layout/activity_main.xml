@@ -42,7 +42,7 @@
                 android:id="@+id/pro_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/timmer"
+                android:layout_alignEnd="@+id/history_creations"
                 android:layout_centerInParent="true"
                 android:layout_marginRight="35dp"
                 android:background="@drawable/ai_pro_gradient_bg"
@@ -75,7 +75,7 @@
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/timmer"
+                android:id="@+id/history_creations"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_alignParentRight="true"

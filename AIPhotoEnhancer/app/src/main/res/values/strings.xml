@@ -65,7 +65,8 @@
     <string name="banner_mid">ca-app-pub-3940256099942544/6300978111</string>
     <string name="banner_all">ca-app-pub-3940256099942544/6300978111</string>
     <string name="server_not_found">Server Not Found</string>
+    <string name="confirm_delete">Confirm delete ?</string>
 
     <!--END OF TEST ADS -->
-
+    <string name="bottom_sheet_behavior">com.google.android.material.bottomsheet.BottomSheetBehavior</string>
 </resources>

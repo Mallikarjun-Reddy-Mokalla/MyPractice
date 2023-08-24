@@ -341,13 +341,13 @@ public class CropActivity extends AppCompatActivity {
 
                 break;
             case "dehaze":
-                startActivity(new Intent(CropActivity.this, AIEditor.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type).putExtra("TITLE", getString(R.string.dehaze)).putExtra("PRO_TAG", getString(R.string.pro_dehaze)));
+                startActivity(new Intent(CropActivity.this, Editscreen.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type).putExtra("TITLE", getString(R.string.dehaze)).putExtra("PRO_TAG", getString(R.string.pro_dehaze)));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
                 break;
             case "descratch":
 
-                startActivity(new Intent(CropActivity.this, AIEditor.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type).putExtra("TITLE", getString(R.string.descratch)).putExtra("PRO_TAG", getString(R.string.pro_descratch)));
+                startActivity(new Intent(CropActivity.this, Editscreen.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type).putExtra("TITLE", getString(R.string.descratch)).putExtra("PRO_TAG", getString(R.string.pro_descratch)));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
                 break;
@@ -357,15 +357,15 @@ public class CropActivity extends AppCompatActivity {
 
                 break;
             case "lensBlur":
-                startActivity(new Intent(CropActivity.this, AIEditor.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type).putExtra("TITLE", getString(R.string.lens_blur)).putExtra("PRO_TAG", getString(R.string.pro_lens)));
+                startActivity(new Intent(CropActivity.this,Editscreen.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type).putExtra("TITLE", getString(R.string.lens_blur)).putExtra("PRO_TAG", getString(R.string.pro_lens)));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 break;
             case "colorize":
-                startActivity(new Intent(CropActivity.this, AIEditor.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type).putExtra("TITLE", getString(R.string.colorize)).putExtra("PRO_TAG", getString(R.string.pro_colorize)));
+                startActivity(new Intent(CropActivity.this, Editscreen.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type).putExtra("TITLE", getString(R.string.colorize)).putExtra("PRO_TAG", getString(R.string.pro_colorize)));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 break;
             case "brighten":
-                startActivity(new Intent(CropActivity.this, AIEditor.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type).putExtra("TITLE", getString(R.string.brighten)).putExtra("PRO_TAG", getString(R.string.pro_brighten)));
+                startActivity(new Intent(CropActivity.this, Editscreen.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type).putExtra("TITLE", getString(R.string.brighten)).putExtra("PRO_TAG", getString(R.string.pro_brighten)));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 break;
 

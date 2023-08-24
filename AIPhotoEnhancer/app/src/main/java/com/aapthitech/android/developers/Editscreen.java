@@ -1,6 +1,7 @@
-package com.aapthitech.android.developers.Activities;
+package com.aapthitech.android.developers;
 
 import static com.aapthitech.android.developers.Activities.MainActivity.mainActivity;
+import static com.aapthitech.android.developers.Data.CommonMethods.commonMethods;
 
 import static java.lang.System.out;
 
@@ -25,16 +26,15 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.aapthitech.android.developers.BackgroundChanger;
+import com.aapthitech.android.developers.Activities.AIEditor;
+import com.aapthitech.android.developers.Activities.MainActivity;
 import com.aapthitech.android.developers.IAP.PremiumScreen;
-import com.aapthitech.android.developers.R;
-import com.aapthitech.android.developers.SaveScreen;
-import com.aapthitech.android.developers.databinding.ActivityCartoonSelfiBinding;
+import com.aapthitech.android.developers.TouchEvents.MultiTouchListener2;
+import com.aapthitech.android.developers.databinding.ActivityEditscreenBinding;
 import com.aapthitech.android.developers.databinding.LoadingBinding;
 import com.aapthitech.android.developers.databinding.SaveSheetDialogBinding;
 import com.aapthitech.android.developers.databinding.ServerNotFoundBinding;
@@ -54,14 +54,18 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class CartoonSelfi extends AppCompatActivity {
-    ActivityCartoonSelfiBinding cartoonSelfiBinding;
+public class Editscreen extends AppCompatActivity {
+    ActivityEditscreenBinding editscreenBinding;
+    String editTitle;
+    String proTitle;
     private Dialog saveDialog;
     private SaveSheetDialogBinding saveSheetDialogBinding;
     private ServerNotFoundBinding serverNotFoundBinding;
     private Dialog loadingDialog, serverNotFoundDialog;
     private String BASEURL = "https://toonifime.com/toonifyme";
     private String SUB_URL_NAME = "";
+    private MultiTouchListener2 multiTouchListener2m;
+    public static String LASTSAVEIMAGE;
 
     private LoadingBinding loadingBinding;
 
@@ -74,130 +78,50 @@ public class CartoonSelfi extends AppCompatActivity {
     String saveImageName = convertedImageFileName + ".png";
     File fileSaveDir = new File(saveCartoonPhoto());
     File file2 = new File(fileSaveDir.getAbsolutePath() + File.separator + saveImageName);
-    public static String LASTSAVEIMAGE;
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
 
-    String title;
-    String proTagTitle;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        cartoonSelfiBinding = ActivityCartoonSelfiBinding.inflate(getLayoutInflater());
-        View view = cartoonSelfiBinding.getRoot();
+        editscreenBinding = ActivityEditscreenBinding.inflate(getLayoutInflater());
+        View view = editscreenBinding.getRoot();
         setContentView(view);
-
-        title = getIntent().getStringExtra("TITLE");
-        proTagTitle = getIntent().getStringExtra("PRO_TAG");
-        if (title != null) {
-            cartoonSelfiBinding.title.setText(title);
+        editTitle = getIntent().getStringExtra("TITLE");
+        proTitle = getIntent().getStringExtra("PRO_TAG");
+        if (editTitle != null) {
+            editscreenBinding.editTitle.setText(editTitle);
         }
-        if (proTagTitle != null) {
-            cartoonSelfiBinding.proText.setText(proTagTitle);
+        if (proTitle != null) {
+            editscreenBinding.proTagText.setText(proTitle);
         }
-        cartoonSelfiBinding.userImage.setImageBitmap(mainActivity.globalBitmap);
-
-        cartoonSelfiBinding.cartoonTabClose.setOnClickListener(new View.OnClickListener() {
+        editscreenBinding.proCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cartoonSelfiBinding.cartoonsListLay.setVisibility(View.VISIBLE);
-                cartoonSelfiBinding.saveCartoonLayout.setVisibility(View.VISIBLE);
-                cartoonSelfiBinding.magicSaveToolsLay.setVisibility(View.GONE);
-            }
-        });
-        cartoonSelfiBinding.adsCardCartoon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cartoonSelfiBinding.cartoonsListLay.setVisibility(View.VISIBLE);
-                cartoonSelfiBinding.saveCartoonLayout.setVisibility(View.VISIBLE);
-                cartoonSelfiBinding.magicSaveToolsLay.setVisibility(View.GONE);
-                cartoonSelfiBinding.proAdLay.setVisibility(View.GONE);
-                SUB_URL_NAME = "/caricature";
-
-                new ApplyfilterToImageAsyncTask().execute();
-            }
-        });
-        cartoonSelfiBinding.magicCartoonCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                cartoonSelfiBinding.cartoonsListLay.setVisibility(View.GONE);
-                cartoonSelfiBinding.saveCartoonLayout.setVisibility(View.GONE);
-                cartoonSelfiBinding.magicSaveToolsLay.setVisibility(View.VISIBLE);
-                cartoonSelfiBinding.proAdLay.setVisibility(View.GONE);
-            }
-        });
-        cartoonSelfiBinding.cartoonOnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-        cartoonSelfiBinding.saveCartoonCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openSaveDialog();
-
-            }
-        });
-        cartoonSelfiBinding.cartoon.setVisibility(View.GONE);
-        cartoonSelfiBinding.cartoon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        cartoonSelfiBinding.removeBg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mainActivity.globalBitmap = savePhotoFrame();
-                startActivity(new Intent(CartoonSelfi.this, BackgroundChanger.class));
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-
-            }
-        });
-        cartoonSelfiBinding.descratch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        cartoonSelfiBinding.lensBlur.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        cartoonSelfiBinding.colorize.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        cartoonSelfiBinding.brighten.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        cartoonSelfiBinding.proCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(CartoonSelfi.this, PremiumScreen.class));
+                startActivity(new Intent(Editscreen.this, PremiumScreen.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
 
+        editscreenBinding.editWithAds.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editscreenBinding.appBarEdit.setVisibility(View.GONE);
+                editscreenBinding.nextSave.nextLayLoad.setVisibility(View.VISIBLE);
+            }
+        });
+        //setting the bitmap
+        editscreenBinding.userImageEdit.setImageBitmap(mainActivity.globalBitmap);
+        editscreenBinding.nextSave.userImageBCSave.setImageBitmap(mainActivity.globalBitmap);
+
+        commonMethods.loadBannerAd(editscreenBinding.nextSave.bannerEraser, Editscreen.this);//load banner Ad
 
     }
 
     private void openSaveDialog() {
-        saveDialog = new Dialog(CartoonSelfi.this);
+        saveDialog = new Dialog(Editscreen.this);
         saveDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         saveSheetDialogBinding = SaveSheetDialogBinding.inflate(getLayoutInflater());
         saveDialog.setContentView(saveSheetDialogBinding.getRoot());
@@ -216,6 +140,7 @@ public class CartoonSelfi extends AppCompatActivity {
                     if (saveDialog.isShowing()) {
                         saveDialog.dismiss();
                         onBackPressed();
+
                     } else {
                         onBackPressed();
                     }
@@ -228,42 +153,46 @@ public class CartoonSelfi extends AppCompatActivity {
                 if (saveDialog != null) {
                     if (saveDialog.isShowing()) {
                         saveDialog.dismiss();
-                        new saveAndGoimag().execute(new Void[0]);
+                        new Editscreen.saveAndGoimag().execute(new Void[0]);
                     } else {
-                        new saveAndGoimag().execute(new Void[0]);
+                        new Editscreen.saveAndGoimag().execute(new Void[0]);
+
                     }
                 }
-
             }
         });
 
-
     }
 
-    public   String pathtoSave() {
-        String SAVE_PATH = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) ? Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() : Environment.getExternalStorageDirectory().toString();
-        return new File(SAVE_PATH + "/AIEnhancer" + "/MyCreations").getPath();
-    }
+    public void imgEnhance() {
 
-    public   String saveCartoonPhoto() {
-        String SAVE_PATH = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) ? Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() : Environment.getExternalStorageDirectory().toString();
-        return new File(SAVE_PATH + "/AIEnhancer" + "/CartoonPhoto").getPath();
+        new ApplyfilterToImageAsyncTask().execute();
     }
+    public class saveAndGoimag extends AsyncTask<Void, Void, String> {
+        @Override
+        public String doInBackground(Void... voidArr) {
+            Editscreen bchanger = Editscreen.this;
+            bchanger.savePath = bchanger.savePhoto();
+            out.println(savePath);
+            return "";
+        }
 
-    private void addImageGallery(String str) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("_data", str);
-        contentValues.put("mime_type", "image/jpeg");
-        getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-    }
+        @Override
+        public void onPreExecute() {
+            super.onPreExecute();
+        }
 
-    public Bitmap savePhotoFrame() {
-        cartoonSelfiBinding.mainLayout.setDrawingCacheEnabled(true);
-        cartoonSelfiBinding.mainLayout.buildDrawingCache();
-        Bitmap bitmap = Bitmap.createBitmap(cartoonSelfiBinding.mainLayout.getDrawingCache());
-        cartoonSelfiBinding.mainLayout.setDrawingCacheEnabled(false);
-        mainActivity.globalBitmap = bitmap;
-        return bitmap;
+        @SuppressLint("WrongConstant")
+        @Override
+        public void onPostExecute(String str) {
+
+            if (Editscreen.this.savePath.equals("")) {
+                Toast.makeText(Editscreen.this, "Couldn't save photo, error", 0).show();
+            } else {
+                openSaveActivity();
+            }
+        }
+
     }
 
     public void noServerFound() {
@@ -301,8 +230,45 @@ public class CartoonSelfi extends AppCompatActivity {
 
     }
 
+    private void goToHome() {
+        Intent intent = new Intent(Editscreen.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+
+    }
+    public String savePhoto() {
+        String str = "";
+        try {
+
+            Bitmap drawingCache = savePhotoFrame();
+            String str2 = "PC" + String.valueOf(System.currentTimeMillis()) + ".png";
+            File file = new File(pathtoSave());
+            setImagePath(file + "/" + str2);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            file2 = new File(file.getAbsolutePath() + File.separator + str2);
+
+
+            try (FileOutputStream out = new FileOutputStream(file2)) {
+                drawingCache.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                str = file.getAbsolutePath() + File.separator + str2;
+
+                if (Build.VERSION.SDK_INT < 29) {
+                    addImageGallery(str);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            this.editscreenBinding.nextSave.userImageBCSave.setDrawingCacheEnabled(false);
+        } catch (Exception unused) {
+        }
+        LASTSAVEIMAGE = str;
+        return str;
+    }
+
     private void loadingDialog() {
-        loadingDialog = new Dialog(CartoonSelfi.this);
+        loadingDialog = new Dialog(Editscreen.this);
         loadingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         loadingBinding = LoadingBinding.inflate(getLayoutInflater());
         loadingDialog.setContentView(loadingBinding.getRoot());
@@ -318,13 +284,42 @@ public class CartoonSelfi extends AppCompatActivity {
         loadingDialog.show();
     }
 
-    private void goToHome() {
-        Intent intent = new Intent(CartoonSelfi.this, MainActivity.class);
-        startActivity(intent);
-        finish();
 
+
+    public static String pathtoSave() {
+        String SAVE_PATH = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) ? Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() : Environment.getExternalStorageDirectory().toString();
+        return new File(SAVE_PATH + "/PictureCraft" + "/MyCreations").getPath();
     }
 
+    public static String saveCartoonPhoto() {
+        String SAVE_PATH = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) ? Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() : Environment.getExternalStorageDirectory().toString();
+        return new File(SAVE_PATH + "/PictureCraft" + "/CartoonPhoto").getPath();
+    }
+
+    private void addImageGallery(String str) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("_data", str);
+        contentValues.put("mime_type", "image/jpeg");
+        getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+    }
+
+    public Bitmap savePhotoFrame() {
+        editscreenBinding.nextSave.mainLayoutSave.setDrawingCacheEnabled(true);
+        editscreenBinding.nextSave.mainLayoutSave.buildDrawingCache();
+        Bitmap bitmap = Bitmap.createBitmap(editscreenBinding.nextSave.mainLayoutSave.getDrawingCache());
+        editscreenBinding.nextSave.mainLayoutSave.setDrawingCacheEnabled(false);
+        mainActivity.globalBitmap = bitmap;
+        return bitmap;
+    }
+
+
+    private void openSaveActivity() {
+        Intent intent = new Intent(this, SaveScreen.class);
+        intent.putExtra("savedImage", savePath);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
+    }
     public class ApplyfilterToImageAsyncTask extends AsyncTask<Void, Integer, Bitmap> {
 
         private Context context;
@@ -339,7 +334,7 @@ public class CartoonSelfi extends AppCompatActivity {
         protected void onPreExecute() {
             loadingDialog();
             //errorImageView.setVisibility(View.GONE);
-            cartoonSelfiBinding.userImage.setVisibility(View.VISIBLE);
+//            editscreenBinding.userImageEdit.setVisibility(View.VISIBLE);
             //placeHolderImageView.setVisibility(View.VISIBLE);
         }
 
@@ -418,7 +413,8 @@ public class CartoonSelfi extends AppCompatActivity {
                                     public void run() {
                                         //placeHolderImageView.setVisibility(View.GONE);
                                         //errorImageView.setVisibility(View.VISIBLE);
-                                        cartoonSelfiBinding.userImage.setVisibility(View.GONE);
+                                        editscreenBinding.userImageEdit.setVisibility(View.GONE);
+                                        editscreenBinding.nextSave.userImageBCSave.setVisibility(View.GONE);
                                         noServerFound();
                                     }
                                 });
@@ -428,7 +424,8 @@ public class CartoonSelfi extends AppCompatActivity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        cartoonSelfiBinding.userImage.setImageBitmap(apiCartoonBitmap);
+                                        editscreenBinding.userImageEdit.setImageBitmap(apiCartoonBitmap);
+                                        editscreenBinding.nextSave.userImageBCSave.setImageBitmap(apiCartoonBitmap);
                                         finalBitmap = apiCartoonBitmap;
                                     }
                                 });
@@ -441,7 +438,8 @@ public class CartoonSelfi extends AppCompatActivity {
                                 public void run() {
                                     //placeHolderImageView.setVisibility(View.GONE);
                                     //errorImageView.setVisibility(View.VISIBLE);
-                                    cartoonSelfiBinding.userImage.setVisibility(View.GONE);
+                                    editscreenBinding.userImageEdit.setVisibility(View.GONE);
+                                    editscreenBinding.nextSave.userImageBCSave.setVisibility(View.GONE);
                                     noServerFound();
                                 }
                             });
@@ -457,7 +455,8 @@ public class CartoonSelfi extends AppCompatActivity {
                         public void run() {
                             //placeHolderImageView.setVisibility(View.GONE);
                             //errorImageView.setVisibility(View.VISIBLE);
-                            cartoonSelfiBinding.userImage.setVisibility(View.GONE);
+                            editscreenBinding.userImageEdit.setVisibility(View.GONE);
+                            editscreenBinding.nextSave.userImageBCSave.setVisibility(View.GONE);
                             noServerFound();
                         }
                     });
@@ -469,7 +468,8 @@ public class CartoonSelfi extends AppCompatActivity {
                         public void run() {
                             //placeHolderImageView.setVisibility(View.GONE);
                             //errorImageView.setVisibility(View.VISIBLE);
-                            cartoonSelfiBinding.userImage.setVisibility(View.GONE);
+                            editscreenBinding.userImageEdit.setVisibility(View.GONE);
+                            editscreenBinding.nextSave.userImageBCSave.setVisibility(View.GONE);
                             noServerFound();
                         }
                     });
@@ -480,7 +480,8 @@ public class CartoonSelfi extends AppCompatActivity {
                     public void run() {
                         //placeHolderImageView.setVisibility(View.GONE);
                         //errorImageView.setVisibility(View.VISIBLE);
-                        cartoonSelfiBinding.userImage.setVisibility(View.GONE);
+                        editscreenBinding.userImageEdit.setVisibility(View.GONE);
+                        editscreenBinding.nextSave.userImageBCSave.setVisibility(View.GONE);
                         noServerFound();
                     }
                 });
@@ -492,7 +493,8 @@ public class CartoonSelfi extends AppCompatActivity {
         protected void onPostExecute(Bitmap bitmap) {
             if (!isFinishing()) {
                 if (bitmap != null) {
-                    cartoonSelfiBinding.userImage.setImageBitmap(bitmap);
+                    editscreenBinding.userImageEdit.setImageBitmap(bitmap);
+                    editscreenBinding.nextSave.userImageBCSave.setImageBitmap(bitmap);
                     mainActivity.globalBitmap = bitmap;
                 /*    mainActivity.CheckActivity = "CartoonBitmap";
                     Next.setVisibility(View.VISIBLE);
@@ -522,75 +524,4 @@ public class CartoonSelfi extends AppCompatActivity {
             }
         }
     }
-
-    public String savePhoto() {
-        String str = "";
-        try {
-
-            Bitmap drawingCache = savePhotoFrame();
-            String str2 = "PC" + String.valueOf(System.currentTimeMillis()) + ".png";
-            File file = new File(pathtoSave());
-            setImagePath(file + "/" + str2);
-            if (!file.exists()) {
-                file.mkdirs();
-            }
-            file2 = new File(file.getAbsolutePath() + File.separator + str2);
-
-
-            try (FileOutputStream out = new FileOutputStream(file2)) {
-                drawingCache.compress(Bitmap.CompressFormat.JPEG, 100, out);
-                str = file.getAbsolutePath() + File.separator + str2;
-
-                if (Build.VERSION.SDK_INT < 29) {
-                    addImageGallery(str);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } catch (Exception unused) {
-        }
-        LASTSAVEIMAGE = str;
-        return str;
-    }
-
-    private class saveAndGoimag extends AsyncTask<Void, Void, String> {
-        @Override
-        public String doInBackground(Void... voidArr) {
-
-            CartoonSelfi cartoonSelfi = CartoonSelfi.this;
-            cartoonSelfi.savePath = cartoonSelfi.savePhoto();
-            out.println(savePath);
-
-            return "";
-        }
-
-        @Override
-        public void onPreExecute() {
-            super.onPreExecute();
-
-
-        }
-
-        @SuppressLint("WrongConstant")
-        @Override
-        public void onPostExecute(String str) {
-
-            if (CartoonSelfi.this.savePath.equals("")) {
-                Toast.makeText(CartoonSelfi.this, "Couldn't save photo, error", 0).show();
-            } else {
-                openSaveActivity();
-            }
-        }
-
-    }
-
-    private void openSaveActivity() {
-
-        Intent intent = new Intent(this, SaveScreen.class);
-        intent.putExtra("savedImage", savePath);
-        startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-
-    }
-
 }

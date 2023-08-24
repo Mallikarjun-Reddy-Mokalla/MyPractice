@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/light_gray"
     tools:context=".BackgroundChanger">
 
 
@@ -49,22 +50,22 @@
         </RelativeLayout>
 
 
-
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/user_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_above="@+id/layout_enchance"
             android:layout_below="@+id/app_bar"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:gravity="center">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true">
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="0.0dip"
@@ -87,8 +88,8 @@
                             android:id="@+id/backgroundImage"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:src="@drawable/ai_transparent_bg"
-                            android:scaleType="fitCenter" />
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ai_transparent_bg" />
 
                         <ImageView
                             android:id="@+id/userImageBC"
@@ -102,7 +103,7 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/layout_enchance"
@@ -115,6 +116,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:padding="20dp">
 
                 <androidx.cardview.widget.CardView

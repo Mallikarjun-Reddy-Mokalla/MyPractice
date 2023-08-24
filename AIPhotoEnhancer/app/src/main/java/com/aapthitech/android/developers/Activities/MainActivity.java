@@ -5,6 +5,8 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.content.ContentValues.TAG;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
+import static com.aapthitech.android.developers.Data.CommonMethods.commonMethods;
+
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -39,7 +41,9 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.aapthitech.android.developers.Creations;
 import com.aapthitech.android.developers.CropActivity;
+import com.aapthitech.android.developers.IAP.PremiumScreen;
 import com.aapthitech.android.developers.R;
 import com.aapthitech.android.developers.Utils.PhotoData;
 import com.aapthitech.android.developers.databinding.ActivityMainBinding;
@@ -72,9 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public Bitmap cameraFinalBitamp;
     public static MainActivity mainActivity;
     public Bitmap globalBitmap;
-
     public Bitmap universalRealBitmap;
-
     public static int cameraFlag;
     public static int finalFlag;
     public int modelFlag;
@@ -91,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         photoData = new PhotoData(this);
         mainActivity = this;
         Glide.with(this).load(R.drawable.ai_enhancer).into(mainBinding.gifView);// to load the gif file
-
+        commonMethods.showGoogleAd((Activity) MainActivity.this, MainActivity.this);
 
         /* set card to view to perform the click event */
         mainBinding.removeObj.setParentCardView(mainBinding.removeObjCard);
@@ -113,6 +115,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainBinding.colorizeCard.setOnClickListener(this);
         mainBinding.brighterCard.setOnClickListener(this);
         mainBinding.removeObjCard.setOnClickListener(this);
+        mainBinding.proText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, PremiumScreen.class));
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+            }
+        });
         mainBinding.mainSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,7 +138,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Intent intent = new Intent(MainActivity.this, CropActivity.class);
                     intent.putExtra("IMG_DATA", result.toString());
                     startActivityForResult(intent, 101);
+
                 }
+            }
+        });
+
+        mainBinding.historyCreations.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, Creations.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
             }
         });
 
@@ -320,6 +340,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         });
+        if (exitDialog.isShowing()) {
+            commonMethods.loadNextNativeAdFlor(MainActivity.this, exitSheetDialogBinding.nativeOnExit);
+        }
     }
 
     public void openCameraGalleryDialog() {
@@ -371,7 +394,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         });
-
+        bindingCamGal.closeDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (galCamDialog != null && galCamDialog.isShowing()) {
+                    galCamDialog.dismiss();
+                }
+            }
+        });
     }
 
     @Override

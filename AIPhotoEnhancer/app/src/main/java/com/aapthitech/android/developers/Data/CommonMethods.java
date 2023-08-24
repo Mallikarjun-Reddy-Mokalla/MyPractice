@@ -184,8 +184,8 @@ public class CommonMethods {
     }/*Natvie Ad loaded ended */
 
     /*banner Ads loading with eCPM ids */
-    public void loadBannerAd(AdView adViewBanner, FrameLayout adViewContainer, Context context) {
-
+    public void loadBannerAd( FrameLayout adViewContainer, Context context) {
+        AdView adViewBanner;
         if (context != null) {
             bannerAdUnits = new String[]{context.getString(R.string.banner_high), context.getString(R.string.banner_mid), context.getString(R.string.banner_all)};
             String adunitId = bannerAdUnits[banneradindex];
@@ -207,7 +207,7 @@ public class CommonMethods {
 
                     if (banneradindex < 2) {
                         banneradindex++;
-                        loadBannerAd(finalAdViewBanner, adViewContainer, context);
+                        loadBannerAd( adViewContainer, context);
                     }
                 }
 

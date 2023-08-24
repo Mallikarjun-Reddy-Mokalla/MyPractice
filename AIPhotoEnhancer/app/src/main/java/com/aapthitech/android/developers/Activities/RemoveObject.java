@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.SeekBar;
 
 import com.aapthitech.android.developers.HoverView2;
+import com.aapthitech.android.developers.R;
 import com.aapthitech.android.developers.databinding.ActivityRemoveObjectBinding;
 
 public class RemoveObject extends AppCompatActivity {
@@ -67,6 +68,7 @@ public class RemoveObject extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
         /* setting the bitmap to the view */
         drawtheObjectToRemove(mainActivity.globalBitmap, RemoveObject.this);
         removeObjectBinding.seekbarBrushSize.incrementProgressBy(20);
@@ -143,4 +145,10 @@ public class RemoveObject extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+    }
 }

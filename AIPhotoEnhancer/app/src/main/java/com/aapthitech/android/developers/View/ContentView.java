@@ -230,8 +230,8 @@ public class ContentView extends View {
     private void drawDirectionIcon(Canvas canvas) {
      /*   int iconWidth = directionIcon.getIntrinsicWidth();
         int iconHeight = directionIcon.getIntrinsicHeight();*/
-        int iconWidth = 60;
-        int iconHeight = 60;
+        int iconWidth = 15;
+        int iconHeight = 15;
         int iconLeft = (int) (linePosition - iconWidth / 2f);
         int iconTop = beforeImage.getHeight() / 2 - iconHeight / 2;
 
@@ -281,7 +281,7 @@ public class ContentView extends View {
                 invalidate();
                 break;
         }
-        return true;
+        return false;
     }
 
 
