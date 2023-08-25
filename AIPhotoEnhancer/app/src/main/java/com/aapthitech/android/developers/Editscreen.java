@@ -26,6 +26,10 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -83,6 +87,10 @@ public class Editscreen extends AppCompatActivity {
         this.imagePath = imagePath;
     }
 
+    public Bitmap sampleFilterBitmap;
+    String pictureType;
+    int sampleFilterResource;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,12 +99,15 @@ public class Editscreen extends AppCompatActivity {
         setContentView(view);
         editTitle = getIntent().getStringExtra("TITLE");
         proTitle = getIntent().getStringExtra("PRO_TAG");
+        pictureType = getIntent().getStringExtra("PICTURE");
+
         if (editTitle != null) {
             editscreenBinding.editTitle.setText(editTitle);
         }
         if (proTitle != null) {
             editscreenBinding.proTagText.setText(proTitle);
         }
+
         editscreenBinding.proCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,16 +119,92 @@ public class Editscreen extends AppCompatActivity {
         editscreenBinding.editWithAds.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AnimationSet animate = loadAnimation();
                 editscreenBinding.appBarEdit.setVisibility(View.GONE);
                 editscreenBinding.nextSave.nextLayLoad.setVisibility(View.VISIBLE);
+                getDummyFilterImages();
             }
         });
-        //setting the bitmap
+        editscreenBinding.nextSave.saveCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openSaveDialog();
+            }
+        });
         editscreenBinding.userImageEdit.setImageBitmap(mainActivity.globalBitmap);
-        editscreenBinding.nextSave.userImageBCSave.setImageBitmap(mainActivity.globalBitmap);
-
         commonMethods.loadBannerAd(editscreenBinding.nextSave.bannerEraser, Editscreen.this);//load banner Ad
 
+    }
+
+    public AnimationSet loadAnimation() {
+
+// For hiding the appBarEdit view with a fade-out animation
+        Animation fadeOutAnimation = new AlphaAnimation(1.0f, 0.0f);
+        fadeOutAnimation.setDuration(300); // Adjust the duration as needed
+        editscreenBinding.appBarEdit.startAnimation(fadeOutAnimation);
+        editscreenBinding.appBarEdit.setVisibility(View.GONE);
+
+// For showing the nextLayLoad view with a fade-in and scale-up animation
+        Animation fadeInAnimation = new AlphaAnimation(0.0f, 1.0f);
+        fadeInAnimation.setDuration(300); // Adjust the duration as needed
+
+        Animation scaleUpAnimation = new ScaleAnimation(
+                0.5f, 1.0f, // X-axis scaling
+                0.5f, 1.0f, // Y-axis scaling
+                Animation.RELATIVE_TO_SELF, 0.5f, // Pivot point X
+                Animation.RELATIVE_TO_SELF, 0.5f  // Pivot point Y
+        );
+        scaleUpAnimation.setDuration(300); // Adjust the duration as needed
+
+        AnimationSet animationSet = new AnimationSet(true);
+        animationSet.addAnimation(fadeInAnimation);
+        animationSet.addAnimation(scaleUpAnimation);
+        return animationSet;
+    }
+
+    private void getDummyFilterImages() {
+        if (pictureType != null) {
+            if (pictureType.equals("DummyPic")) {
+                if (editTitle != null) {
+                    if (editTitle.equals(getString(R.string.descratch))) {
+                        sampleFilterResource = R.drawable.d_descratch_filter;
+                        sampleFilterBitmap = BitmapFactory.decodeResource(getResources(), sampleFilterResource);
+
+                    } else if (editTitle.equals(getString(R.string.lens_blur))) {
+                        sampleFilterResource = R.drawable.d_lens_blur_filter;
+                        sampleFilterBitmap = BitmapFactory.decodeResource(getResources(), sampleFilterResource);
+
+                    } else if (editTitle.equals(getString(R.string.colorize))) {
+                        sampleFilterResource = R.drawable.d_colorize_filter;
+                        sampleFilterBitmap = BitmapFactory.decodeResource(getResources(), sampleFilterResource);
+
+                    } else if (editTitle.equals(getString(R.string.brighten))) {
+                        sampleFilterResource = R.drawable.d_brighten_filter;
+                        sampleFilterBitmap = BitmapFactory.decodeResource(getResources(), sampleFilterResource);
+
+                    } else if (editTitle.equals(getString(R.string.dehaze))) {
+                        sampleFilterResource = R.drawable.d_dehaze_filter;
+                        sampleFilterBitmap = BitmapFactory.decodeResource(getResources(), sampleFilterResource);
+
+                    } else {
+                        //setting the bitmap
+                        editscreenBinding.userImageEdit.setImageBitmap(mainActivity.globalBitmap);
+                        editscreenBinding.nextSave.userImageBCSave.setImageBitmap(mainActivity.globalBitmap);
+                    }
+                    if (sampleFilterBitmap != null) {
+                        sampleFilterBitmap = BitmapFactory.decodeResource(getResources(), sampleFilterResource);
+                        editscreenBinding.userImageEdit.setImageBitmap(mainActivity.globalBitmap);
+                        editscreenBinding.nextSave.userImageBCSave.setImageBitmap(sampleFilterBitmap);
+
+                    } else {
+                        editscreenBinding.nextSave.userImageBCSave.setImageBitmap(mainActivity.globalBitmap);
+                    }
+                }
+
+            } else {
+//                        new ApplyfilterToImageAsyncTask().execute();
+            }
+        }
     }
 
     private void openSaveDialog() {
@@ -140,7 +227,6 @@ public class Editscreen extends AppCompatActivity {
                     if (saveDialog.isShowing()) {
                         saveDialog.dismiss();
                         onBackPressed();
-
                     } else {
                         onBackPressed();
                     }
@@ -168,6 +254,7 @@ public class Editscreen extends AppCompatActivity {
 
         new ApplyfilterToImageAsyncTask().execute();
     }
+
     public class saveAndGoimag extends AsyncTask<Void, Void, String> {
         @Override
         public String doInBackground(Void... voidArr) {
@@ -236,6 +323,7 @@ public class Editscreen extends AppCompatActivity {
         finish();
 
     }
+
     public String savePhoto() {
         String str = "";
         try {
@@ -285,7 +373,6 @@ public class Editscreen extends AppCompatActivity {
     }
 
 
-
     public static String pathtoSave() {
         String SAVE_PATH = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) ? Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() : Environment.getExternalStorageDirectory().toString();
         return new File(SAVE_PATH + "/PictureCraft" + "/MyCreations").getPath();
@@ -320,6 +407,7 @@ public class Editscreen extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
     }
+
     public class ApplyfilterToImageAsyncTask extends AsyncTask<Void, Integer, Bitmap> {
 
         private Context context;

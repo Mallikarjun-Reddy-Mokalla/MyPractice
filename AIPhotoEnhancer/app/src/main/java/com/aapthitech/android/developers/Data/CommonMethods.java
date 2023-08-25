@@ -39,6 +39,7 @@ public class CommonMethods {
 
     private String[] bannerAdUnits;
     private int banneradindex = 0;
+    boolean nativeAdLoaded= false;
     public static final CommonMethods commonMethods = new CommonMethods();
 
     public static CommonMethods getInstance() {
@@ -49,7 +50,9 @@ public class CommonMethods {
     public void loadNextNativeAdFlor(Context context, FrameLayout frameLayout) {
         if (context != null && frameLayout != null) {
 
-            adUnitIds = new String[]{context.getString(R.string.native_high), context.getString(R.string.native_mid), context.getString(R.string.native_all)};
+            adUnitIds = new String[]{context.getString(R.string.native_high),
+                    context.getString(R.string.native_mid),
+                    context.getString(R.string.native_all)};
             String adUnitId = adUnitIds[currentAdIndex];
             AdLoader.Builder builder = new AdLoader.Builder(context, adUnitId);
             builder.forNativeAd(new com.google.android.gms.ads.nativead.NativeAd.OnNativeAdLoadedListener() {

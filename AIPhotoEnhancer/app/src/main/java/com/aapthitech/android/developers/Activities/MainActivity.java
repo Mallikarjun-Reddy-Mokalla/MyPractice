@@ -1,9 +1,6 @@
 package com.aapthitech.android.developers.Activities;
 
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.content.ContentValues.TAG;
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 import static com.aapthitech.android.developers.Data.CommonMethods.commonMethods;
 
@@ -16,15 +13,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
-import androidx.core.view.GravityCompat;
 
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -43,19 +41,23 @@ import android.widget.Toast;
 
 import com.aapthitech.android.developers.Creations;
 import com.aapthitech.android.developers.CropActivity;
+import com.aapthitech.android.developers.Data.ActionData;
 import com.aapthitech.android.developers.IAP.PremiumScreen;
 import com.aapthitech.android.developers.R;
 import com.aapthitech.android.developers.Utils.PhotoData;
 import com.aapthitech.android.developers.databinding.ActivityMainBinding;
+import com.aapthitech.android.developers.databinding.DemoImagesBinding;
 import com.aapthitech.android.developers.databinding.ExitSheetDialogBinding;
 import com.aapthitech.android.developers.databinding.GalleryCamDialogBinding;
-import com.aapthitech.android.developers.databinding.SaveSheetDialogBinding;
 import com.bumptech.glide.Glide;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     ActivityMainBinding mainBinding;
@@ -81,6 +83,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static int finalFlag;
     public int modelFlag;
     public static ActivityResultLauncher<String> mGetContent;
+    Bitmap bitmap1;
+    Bitmap bitmap2;
+    Bitmap bitmap3;
+    public static boolean selecteddummy = false;
+    public static boolean dummy1 = false;
+    public static boolean dummy2 = false;
+    public static boolean dummy3 = false;
+    public int imageResource;
+    public int imageResource2;
+    public int imageResource3;
+    String optType;
+    private DemoImagesBinding demoImagesBinding;
+    Dialog demoImagesDialog;
+    Map<String, ActionData> actionMapping = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -345,6 +361,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    public void demoImagesDialog() {
+        demoImagesDialog = new Dialog(this);
+        demoImagesDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        demoImagesBinding = DemoImagesBinding.inflate(getLayoutInflater());
+        demoImagesDialog.setContentView(bindingCamGal.getRoot());
+        // Apply margin to the CardView using layout parameters
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) demoImagesBinding.demoCard.getLayoutParams();
+        int marginInPixels = (int) getResources().getDimension(R.dimen.dialog_margin); // Replace with your actual dimension resource
+        layoutParams.setMargins(marginInPixels, marginInPixels, marginInPixels, marginInPixels);
+        demoImagesBinding.demoCard.setLayoutParams(layoutParams);
+
+        demoImagesDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        demoImagesDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        demoImagesDialog.getWindow().setGravity(Gravity.CENTER);
+        demoImagesDialog.show();
+        demoImagesDialog.setCancelable(false);
+
+    }
+
     public void openCameraGalleryDialog() {
         galCamDialog = new Dialog(this);
         galCamDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -361,6 +396,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         galCamDialog.getWindow().setGravity(Gravity.CENTER);
         galCamDialog.show();
         galCamDialog.setCancelable(false);
+        setDummyImage(bindingCamGal.camGalLay);
+        actionMapping.put("removeObj", new ActionData("removeObj", R.drawable.d_remove_obj));
+        actionMapping.put("aiEnhance", new ActionData("aiEnhance", R.drawable.d_enhance));
+        actionMapping.put("removeBG", new ActionData("removeBG", R.drawable.d_remove_bg));
+        actionMapping.put("dehaze", new ActionData("dehaze", R.drawable.d_dehaze));
+        actionMapping.put("descratch", new ActionData("descratch", R.drawable.d_descratch));
+        actionMapping.put("cartoonSelfi", new ActionData("cartoonSelfi", R.drawable.d_cartoon_selfie));
+        actionMapping.put("lensBlur", new ActionData("lensBlur", R.drawable.d_lens_blur));
+        actionMapping.put("colorize", new ActionData("colorize", R.drawable.d_colorize));
+        actionMapping.put("brighten", new ActionData("brighten", R.drawable.d_brighten));
+        ActionData selectedAction = actionMapping.get(optedAction);
+        if (selectedAction != null) {
+            optType = selectedAction.optType;
+            int imageResource = selectedAction.imageResource1;
+            // Load bitmaps using imageResource values
+            bitmap1 = BitmapFactory.decodeResource(getResources(), imageResource);
+            bindingCamGal.demoImage.setImageBitmap(bitmap1);
+            // Replace the above lines with actual bitmap loading logic
+            System.out.println("Opted Type: " + optType);
+            System.out.println("Image Resource 1: " + imageResource);
+            System.out.println("Image Resource 2: " + imageResource2);
+            System.out.println("Image Resource 3: " + imageResource3);
+        }
+
+
         bindingCamGal.camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -402,7 +462,81 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         });
+
+
+        bindingCamGal.demoImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Uri uri = convertBitmapToUri(getApplicationContext(), bitmap1);
+                if (galCamDialog != null && galCamDialog.isShowing()) {
+                    galCamDialog.dismiss();
+                }
+                startCropActivity(uri, "DummyPic", optType);
+            }
+        });
+
     }
+
+    private void setDummyImage(LinearLayout camGalLay) {
+        if (optedAction != null) {
+            if (optedAction.equals("removeObj")) {
+                camGalLay.setVisibility(View.GONE);
+
+            } /*else if (optedAction.equals("aiEnhance")) {
+
+
+            } else if (optedAction.equals("removeBG")) {
+
+
+            }*/ else if (optedAction.equals("dehaze")) {
+                camGalLay.setVisibility(View.GONE);
+
+            } else if (optedAction.equals("descratch")) {
+                camGalLay.setVisibility(View.GONE);
+
+            } /*else if (optedAction.equals("cartoonSelfi")) {
+                camGalLay.setVisibility(View.GONE);
+
+
+            }*/ else if (optedAction.equals("lensBlur")) {
+                camGalLay.setVisibility(View.GONE);
+
+
+            } else if (optedAction.equals("colorize")) {
+                camGalLay.setVisibility(View.GONE);
+
+
+            } else if (optedAction.equals("brighten")) {
+
+                camGalLay.setVisibility(View.GONE);
+
+            }
+        }
+        bitmap1 = BitmapFactory.decodeResource(getResources(), imageResource);
+        bitmap2 = BitmapFactory.decodeResource(getResources(), imageResource2);
+        bitmap3 = BitmapFactory.decodeResource(getResources(), imageResource3);
+    }
+
+    public Uri convertBitmapToUri(Context context, Bitmap bitmap) {
+        File imagesDirectory = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "MyAppImages");
+        if (!imagesDirectory.exists()) {
+            imagesDirectory.mkdirs();
+        }
+
+        String imageName = "image_" + System.currentTimeMillis() + ".jpg";
+        File imageFile = new File(imagesDirectory, imageName);
+
+        try (FileOutputStream outputStream = new FileOutputStream(imageFile)) {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return Uri.fromFile(imageFile);
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -447,6 +581,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
     }
+
+    public void openCameraGalleryDialog1(String image, String image2, String image3) {
+        imageResource = R.drawable.remove_before_after;
+        imageResource2 = R.drawable.remove_before_after;
+        imageResource3 = R.drawable.remove_before_after;
+    }
+
 
     /*
         private void openNewActivity(Uri uri, String type) {
@@ -542,12 +683,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void startCropActivity(Uri uri, String type, String selectedCard) {
-        startActivity(new Intent(MainActivity.this, CropActivity.class)
-                .putExtra("IMG_DATA", uri.toString())
-                .putExtra("PICTURE", type)
-                .putExtra("selectedCard", selectedCard)
-                .putExtra("TITLE", getString(R.string.brighten))
-                .putExtra("PRO_TAG", getString(R.string.pro_brighten)));
+        startActivity(new Intent(MainActivity.this, CropActivity.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type).putExtra("selectedCard", selectedCard).putExtra("TITLE", getString(R.string.brighten)).putExtra("PRO_TAG", getString(R.string.pro_brighten)));
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 

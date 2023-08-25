@@ -3,10 +3,12 @@ package com.aapthitech.android.developers.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.aapthitech.android.developers.R;
 import com.aapthitech.android.developers.databinding.ActivityFeedBackBinding;
@@ -14,6 +16,17 @@ import com.aapthitech.android.developers.databinding.ActivityFeedBackBinding;
 public class FeedBack extends AppCompatActivity {
     ActivityFeedBackBinding feedBackBinding;
     int reviewCount;
+    String feedbackToMail;
+    String lowQuality;
+    String unRealistic;
+    String bugs;
+    String premium;
+    String otherissues;
+    int lowclickCount = 1;
+    int unRealclickCount = 1;
+    int bugsclickCount = 1;
+    int proclickCount = 1;
+    int otherclickCount = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +40,7 @@ public class FeedBack extends AppCompatActivity {
             @SuppressLint("UseCompatLoadingForDrawables")
             @Override
             public void onClick(View v) {
-                reviewCount=1;
+                reviewCount = 1;
                 feedBackBinding.reviewStar1.setImageDrawable(getDrawable(R.drawable.ai_review_star_full));
                 feedBackBinding.reviewStar2.setImageDrawable(getDrawable(R.drawable.ai_review_star));
                 feedBackBinding.reviewStar3.setImageDrawable(getDrawable(R.drawable.ai_review_star));
@@ -39,7 +52,7 @@ public class FeedBack extends AppCompatActivity {
             @SuppressLint("UseCompatLoadingForDrawables")
             @Override
             public void onClick(View v) {
-                reviewCount=2;
+                reviewCount = 2;
                 feedBackBinding.reviewStar1.setImageDrawable(getDrawable(R.drawable.ai_review_star_full));
                 feedBackBinding.reviewStar2.setImageDrawable(getDrawable(R.drawable.ai_review_star_full));
                 feedBackBinding.reviewStar3.setImageDrawable(getDrawable(R.drawable.ai_review_star));
@@ -51,7 +64,7 @@ public class FeedBack extends AppCompatActivity {
             @SuppressLint("UseCompatLoadingForDrawables")
             @Override
             public void onClick(View v) {
-                reviewCount=3;
+                reviewCount = 3;
                 feedBackBinding.reviewStar1.setImageDrawable(getDrawable(R.drawable.ai_review_star_full));
                 feedBackBinding.reviewStar2.setImageDrawable(getDrawable(R.drawable.ai_review_star_full));
                 feedBackBinding.reviewStar3.setImageDrawable(getDrawable(R.drawable.ai_review_star_full));
@@ -64,7 +77,7 @@ public class FeedBack extends AppCompatActivity {
             @SuppressLint("UseCompatLoadingForDrawables")
             @Override
             public void onClick(View v) {
-                reviewCount=4;
+                reviewCount = 4;
                 feedBackBinding.reviewStar1.setImageDrawable(getDrawable(R.drawable.ai_review_star_full));
                 feedBackBinding.reviewStar2.setImageDrawable(getDrawable(R.drawable.ai_review_star_full));
                 feedBackBinding.reviewStar3.setImageDrawable(getDrawable(R.drawable.ai_review_star_full));
@@ -76,7 +89,7 @@ public class FeedBack extends AppCompatActivity {
             @SuppressLint("UseCompatLoadingForDrawables")
             @Override
             public void onClick(View v) {
-                reviewCount=5;
+                reviewCount = 5;
                 feedBackBinding.reviewStar1.setImageDrawable(getDrawable(R.drawable.ai_review_star_full));
                 feedBackBinding.reviewStar2.setImageDrawable(getDrawable(R.drawable.ai_review_star_full));
                 feedBackBinding.reviewStar3.setImageDrawable(getDrawable(R.drawable.ai_review_star_full));
@@ -88,30 +101,95 @@ public class FeedBack extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                if (lowclickCount == 1) {
+                    lowQuality = "The App is Low Quality";
+                    feedBackBinding.lowQualityText.setBackground(getDrawable(R.drawable.magic_gradient));
+                    lowclickCount++;
+                }else {
+                    lowclickCount--;
+                    lowQuality = "";
+                    feedBackBinding.lowQualityText.setBackground(getDrawable(R.drawable.feed_back_gradient));
+
+                }
             }
         });
         feedBackBinding.unrelisticText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                  if (unRealclickCount == 1) {
+                     unRealistic = "App do not seem realistic";
+                    feedBackBinding.unrelisticText.setBackground(getDrawable(R.drawable.magic_gradient));
+                    unRealclickCount++;
+                }else {
+                    unRealclickCount--;
+                     unRealistic = "";
+                    feedBackBinding.unrelisticText.setBackground(getDrawable(R.drawable.feed_back_gradient));
 
+                }
             }
         });
         feedBackBinding.premiumText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                 if (proclickCount == 1) {
+                     premium = "Premium is too Cost";
+                    feedBackBinding.premiumText.setBackground(getDrawable(R.drawable.magic_gradient));
+                     proclickCount++;
+                }else {
+                     proclickCount--;
+                     premium = "";
+                    feedBackBinding.premiumText.setBackground(getDrawable(R.drawable.feed_back_gradient));
+
+                }
             }
         });
         feedBackBinding.otherText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (otherclickCount == 1) {
+                    otherissues = "More issues";
+                    feedBackBinding.otherText.setBackground(getDrawable(R.drawable.magic_gradient));
+                    otherclickCount++;
+                }else {
+                    otherclickCount--;
+                    otherissues = "";
+                    feedBackBinding.otherText.setBackground(getDrawable(R.drawable.feed_back_gradient));
 
+                }
             }
         });
         feedBackBinding.bugsText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (bugsclickCount == 1) {
+                    bugs = "App as Bugs";
+                    feedBackBinding.bugsText.setBackground(getDrawable(R.drawable.magic_gradient));
+                    bugsclickCount++;
+                }else {
+                    bugs = "";
+                    bugsclickCount--;
+                    feedBackBinding.bugsText.setBackground(getDrawable(R.drawable.feed_back_gradient));
 
+                }
+            }
+        });
+        feedBackBinding.submitFeedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!feedBackBinding.feedBackEditText.getText().toString().isEmpty()) {
+                    feedbackToMail = feedBackBinding.feedBackEditText.getText().toString();
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+                    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"mallikarjunreddy900@gmail.com"});
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "AI Enhancer Feedback");
+                    intent.putExtra(Intent.EXTRA_TEXT, "Dear AI Enhancer Team,\n\nI would like to provide the following feedback:\n\n" + "\n\n" + lowQuality
+                            + "\n" + unRealistic + "\n" + bugs + "\n" + premium + "\n" + otherissues +
+                            "\n\n" + feedbackToMail);
+                    startActivity(Intent.createChooser(intent, "Send Feedback"));
+                } else {
+                    Toast.makeText(FeedBack.this, "Enter Feedback", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

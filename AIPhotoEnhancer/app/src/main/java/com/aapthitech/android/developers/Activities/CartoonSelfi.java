@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aapthitech.android.developers.BackgroundChanger;
+import com.aapthitech.android.developers.Editscreen;
 import com.aapthitech.android.developers.IAP.PremiumScreen;
 import com.aapthitech.android.developers.R;
 import com.aapthitech.android.developers.SaveScreen;
@@ -82,6 +83,7 @@ public class CartoonSelfi extends AppCompatActivity {
 
     String title;
     String proTagTitle;
+    String pictureType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +96,7 @@ public class CartoonSelfi extends AppCompatActivity {
 
         title = getIntent().getStringExtra("TITLE");
         proTagTitle = getIntent().getStringExtra("PRO_TAG");
+        pictureType = getIntent().getStringExtra("PICTURE");
         if (title != null) {
             cartoonSelfiBinding.title.setText(title);
         }
@@ -145,46 +148,65 @@ public class CartoonSelfi extends AppCompatActivity {
 
             }
         });
-        cartoonSelfiBinding.cartoon.setVisibility(View.GONE);
-        cartoonSelfiBinding.cartoon.setOnClickListener(new View.OnClickListener() {
+        cartoonSelfiBinding.cartoon.setVisibility(View.GONE);//
+        cartoonSelfiBinding.erase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-            }
-        });
-        cartoonSelfiBinding.removeBg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mainActivity.globalBitmap = savePhotoFrame();
-                startActivity(new Intent(CartoonSelfi.this, BackgroundChanger.class));
+                startActivity(new Intent(CartoonSelfi.this, RemoveObject.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-
             }
         });
-        cartoonSelfiBinding.descratch.setOnClickListener(new View.OnClickListener() {
+        cartoonSelfiBinding.enhance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(new Intent(CartoonSelfi.this, AIEditor.class).putExtra("PICTURE", pictureType).putExtra("TITLE", getString(R.string.enhance_title)).putExtra("PRO_TAG", getString(R.string.pro_enhance)));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
         cartoonSelfiBinding.lensBlur.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(new Intent(CartoonSelfi.this, Editscreen.class).putExtra("PICTURE", pictureType).putExtra("TITLE", getString(R.string.lens_blur)).putExtra("PRO_TAG", getString(R.string.pro_lens)));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
         cartoonSelfiBinding.colorize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(new Intent(CartoonSelfi.this, Editscreen.class).putExtra("PICTURE", pictureType).putExtra("TITLE", getString(R.string.colorize)).putExtra("PRO_TAG", getString(R.string.pro_colorize)));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
         cartoonSelfiBinding.brighten.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(new Intent(CartoonSelfi.this, Editscreen.class).putExtra("PICTURE", pictureType).putExtra("TITLE", getString(R.string.brighten)).putExtra("PRO_TAG", getString(R.string.pro_brighten)));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
+        cartoonSelfiBinding.dehaze.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(CartoonSelfi.this, Editscreen.class).putExtra("PICTURE", pictureType).putExtra("TITLE", getString(R.string.dehaze)).putExtra("PRO_TAG", getString(R.string.pro_dehaze)));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+        cartoonSelfiBinding.descratch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(CartoonSelfi.this, Editscreen.class).putExtra("PICTURE", pictureType).putExtra("TITLE", getString(R.string.descratch)).putExtra("PRO_TAG", getString(R.string.pro_descratch)));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+        cartoonSelfiBinding.removeBg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(CartoonSelfi.this, BackgroundChanger.class).putExtra("PICTURE", pictureType).putExtra("TITLE", getString(R.string.removebg)).putExtra("PRO_TAG", getString(R.string.remove_pro_bg)));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+
+
         cartoonSelfiBinding.proCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -240,12 +262,12 @@ public class CartoonSelfi extends AppCompatActivity {
 
     }
 
-    public   String pathtoSave() {
+    public String pathtoSave() {
         String SAVE_PATH = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) ? Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() : Environment.getExternalStorageDirectory().toString();
         return new File(SAVE_PATH + "/AIEnhancer" + "/MyCreations").getPath();
     }
 
-    public   String saveCartoonPhoto() {
+    public String saveCartoonPhoto() {
         String SAVE_PATH = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) ? Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() : Environment.getExternalStorageDirectory().toString();
         return new File(SAVE_PATH + "/AIEnhancer" + "/CartoonPhoto").getPath();
     }

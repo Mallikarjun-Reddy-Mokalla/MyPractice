@@ -31,7 +31,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.aapthitech.android.developers.BackgroundChanger;
+ import com.aapthitech.android.developers.Editscreen;
 import com.aapthitech.android.developers.IAP.PremiumScreen;
 import com.aapthitech.android.developers.R;
 import com.aapthitech.android.developers.SaveScreen;
@@ -86,6 +86,8 @@ public class AIEditor extends AppCompatActivity {
         this.imagePath = imagePath;
     }
 
+    String pictureType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +108,14 @@ public class AIEditor extends AppCompatActivity {
 
         }
         assert titleText != null;
+        pictureType = getIntent().getStringExtra("PICTURE");
+        if (pictureType != null) {
+            if (pictureType.equals("DummyPic")) {
+
+            } else {
+
+            }
+        }
         if (titleText.equals(getString(R.string.enhance))) {
             SUB_URL_NAME = "/superres";
         }
@@ -151,7 +161,17 @@ public class AIEditor extends AppCompatActivity {
         aieditorBinding.adsCardEn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imgEnhance();
+                if (pictureType != null) {
+                    if (pictureType.equals("DummyPic")) {
+                        aieditorBinding.nextLayEdit.userImageBCSave.setVisibility(View.VISIBLE);
+//                        aieditorBinding.nextLayEdit.userImageBCSave.setImageDrawable(getDrawable(R.drawable.remove_before_after));
+                        aieditorBinding.nextLayEdit.userImageBCSave.setImageBitmap(mainActivity.globalBitmap);
+
+                    } else {
+                        imgEnhance();
+
+                    }
+                }
                 aieditorBinding.appBarLay.setVisibility(View.GONE);
                 aieditorBinding.nextLayEdit.nextLayLoad.setVisibility(View.VISIBLE);
             }
@@ -160,6 +180,65 @@ public class AIEditor extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(AIEditor.this, PremiumScreen.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+        aieditorBinding.nextLayEdit.enhance.setVisibility(View.GONE);//
+        aieditorBinding.nextLayEdit.cartoon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AIEditor.this, CartoonSelfi.class)
+                        .putExtra("TITLE", getString(R.string.cartton)).putExtra("PRO_TAG", getString(R.string.pro_cartoon)).putExtra("PICTURE", pictureType));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+        aieditorBinding.nextLayEdit.erase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AIEditor.this, RemoveObject.class).putExtra("PICTURE", pictureType));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+        aieditorBinding.nextLayEdit.removeBg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AIEditor.this, AIEditor.class).putExtra("TITLE", getString(R.string.enhance_title)).putExtra("PRO_TAG", getString(R.string.pro_enhance)).putExtra("PICTURE", pictureType));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+        aieditorBinding.nextLayEdit.lensBlur.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AIEditor.this, Editscreen.class) .putExtra("TITLE", getString(R.string.lens_blur)).putExtra("PRO_TAG", getString(R.string.pro_lens)).putExtra("PICTURE", pictureType));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+        aieditorBinding.nextLayEdit.colorize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AIEditor.this, Editscreen.class).putExtra("TITLE", getString(R.string.colorize)).putExtra("PRO_TAG", getString(R.string.pro_colorize)).putExtra("PICTURE", pictureType));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+        aieditorBinding.nextLayEdit.brighten.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AIEditor.this, Editscreen.class).putExtra("TITLE", getString(R.string.brighten)).putExtra("PRO_TAG", getString(R.string.pro_brighten)).putExtra("PICTURE", pictureType));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+        aieditorBinding.nextLayEdit.dehaze.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AIEditor.this, Editscreen.class).putExtra("TITLE", getString(R.string.dehaze)).putExtra("PRO_TAG", getString(R.string.pro_dehaze)).putExtra("PICTURE", pictureType));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+        aieditorBinding.nextLayEdit.descratch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AIEditor.this, Editscreen.class)
+                        .putExtra("TITLE", getString(R.string.descratch)).putExtra("PRO_TAG", getString(R.string.pro_descratch)).putExtra("PICTURE", pictureType));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
@@ -203,7 +282,7 @@ public class AIEditor extends AppCompatActivity {
                         saveDialog.dismiss();
                         new saveAndGoimag().execute(new Void[0]);
                     } else {
-                        new  saveAndGoimag().execute(new Void[0]);
+                        new saveAndGoimag().execute(new Void[0]);
 
                     }
                 }
@@ -371,6 +450,7 @@ public class AIEditor extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
     }
+
     public class ApplyfilterToImageAsyncTask extends AsyncTask<Void, Integer, Bitmap> {
 
         private Context context;

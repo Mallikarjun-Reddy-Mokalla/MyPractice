@@ -93,6 +93,8 @@ public class BackgroundChanger extends AppCompatActivity {
         this.imagePath = imagePath;
     }
 
+    private String pictureType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,6 +106,8 @@ public class BackgroundChanger extends AppCompatActivity {
         titleText = getIntent().getStringExtra("TITLE");
         effectTitle = getIntent().getStringExtra("TITLE");
         proTag = getIntent().getStringExtra("PRO_TAG");
+        pictureType = getIntent().getStringExtra("PICTURE");
+
         changerBinding.userImageBC.setImageBitmap(mainActivity.globalBitmap);
         changerBinding.nextLaySave.userImageBCSave.setImageBitmap(mainActivity.globalBitmap);
 
@@ -122,7 +126,15 @@ public class BackgroundChanger extends AppCompatActivity {
                 changerBinding.nextLaySave.nextLayLoad.setVisibility(View.VISIBLE);
 
                 if (changerBinding.userImageBC != null) {
-                    new ApplyfilterToImageAsyncTask().execute();
+                    if (pictureType != null) {
+                        if (pictureType.equals("DummyPic")) {
+                            changerBinding.nextLaySave.userImageBCSave.setVisibility(View.VISIBLE);
+                            changerBinding.nextLaySave.userImageBCSave.setImageBitmap(mainActivity.globalBitmap);
+
+                        } else {
+                            new ApplyfilterToImageAsyncTask().execute();
+                        }
+                    }
                 } else {
                     Toast.makeText(BackgroundChanger.this, "Please Upload Image", Toast.LENGTH_SHORT).show();
                 }
@@ -169,6 +181,22 @@ public class BackgroundChanger extends AppCompatActivity {
                 showSaveDialog();
             }
         });
+        changerBinding.nextLaySave.pro3X.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(BackgroundChanger.this, PremiumScreen.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
+            }
+        });
+        changerBinding.nextLaySave.proLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(BackgroundChanger.this, PremiumScreen.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
+            }
+        });
 
         multiTouchListener2m = new MultiTouchListener2(changerBinding.userImageBC, BackgroundChanger.this);
         changerBinding.userImageBC.setOnTouchListener(multiTouchListener2m);
@@ -186,18 +214,66 @@ public class BackgroundChanger extends AppCompatActivity {
         setupViewPager(changerBinding.nextLaySave.viewPagers);
         changerBinding.nextLaySave.tabLayouts.setupWithViewPager(changerBinding.nextLaySave.viewPagers);
         commonMethods.loadBannerAd(changerBinding.nextLaySave.bannerEraser, BackgroundChanger.this);
-        changerBinding.nextLaySave.removeBg.setVisibility(View.GONE);
-        changerBinding.nextLaySave.cartoon.setOnClickListener(new View.OnClickListener() {
+        changerBinding.nextLaySave.removeBg.setVisibility(View.GONE);//
+         changerBinding.nextLaySave.cartoon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(BackgroundChanger.this, CartoonSelfi.class).putExtra("TITLE", getString(R.string.cartton)).putExtra("PRO_TAG", getString(R.string.pro_cartoon)));
+                startActivity(new Intent(BackgroundChanger.this, CartoonSelfi.class)
+                        .putExtra("TITLE", getString(R.string.cartton)).putExtra("PRO_TAG", getString(R.string.pro_cartoon)).putExtra("PICTURE", pictureType));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
         changerBinding.nextLaySave.erase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(BackgroundChanger.this, RemoveObject.class) );
+                    startActivity(new Intent(BackgroundChanger.this, RemoveObject.class).putExtra("PICTURE", pictureType));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+        changerBinding.nextLaySave.enhance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 startActivity(new Intent(BackgroundChanger.this, AIEditor.class)
+                         .putExtra("TITLE", getString(R.string.enhance_title)).putExtra("PRO_TAG", getString(R.string.pro_enhance)).putExtra("PICTURE", pictureType));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+        changerBinding.nextLaySave.lensBlur.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(BackgroundChanger.this,Editscreen.class)
+                        .putExtra("TITLE", getString(R.string.lens_blur)).putExtra("PRO_TAG", getString(R.string.pro_lens)).putExtra("PICTURE", pictureType));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+        changerBinding.nextLaySave.colorize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(BackgroundChanger.this, Editscreen.class)
+                        .putExtra("TITLE", getString(R.string.colorize)).putExtra("PRO_TAG", getString(R.string.pro_colorize)).putExtra("PICTURE", pictureType));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+        changerBinding.nextLaySave.brighten.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(BackgroundChanger.this, Editscreen.class)
+                        .putExtra("TITLE", getString(R.string.brighten)).putExtra("PRO_TAG", getString(R.string.pro_brighten)).putExtra("PICTURE", pictureType));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+        changerBinding.nextLaySave.dehaze.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(BackgroundChanger.this, Editscreen.class)
+                        .putExtra("TITLE", getString(R.string.dehaze)).putExtra("PRO_TAG", getString(R.string.pro_dehaze)).putExtra("PICTURE", pictureType));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+        changerBinding.nextLaySave.descratch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(BackgroundChanger.this, Editscreen.class).putExtra("PICTURE", pictureType).putExtra("TITLE", getString(R.string.descratch)).putExtra("PRO_TAG", getString(R.string.pro_descratch)));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
@@ -297,10 +373,7 @@ public class BackgroundChanger extends AppCompatActivity {
             if (BASEURL != null) {
 
                 try {
-                    OkHttpClient client = new OkHttpClient.Builder()
-                            .connectTimeout(1, TimeUnit.MINUTES)
-                            .readTimeout(1, TimeUnit.MINUTES)
-                            .build();
+                    OkHttpClient client = new OkHttpClient.Builder().connectTimeout(1, TimeUnit.MINUTES).readTimeout(1, TimeUnit.MINUTES).build();
 
                     if (mainActivity != null && mainActivity.universalRealBitmap != null) {
                         bitmap = mainActivity.globalBitmap;
@@ -320,11 +393,7 @@ public class BackgroundChanger extends AppCompatActivity {
 
                     RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonParams.toString());
                     String completeUrl = BASEURL;
-                    Request request = new Request.Builder()
-                            .url(completeUrl)
-                            .addHeader("Content-Type", "application/json")
-                            .post(requestBody)
-                            .build();
+                    Request request = new Request.Builder().url(completeUrl).addHeader("Content-Type", "application/json").post(requestBody).build();
 
                     Response response = client.newCall(request).execute();
                     if (response.isSuccessful()) {

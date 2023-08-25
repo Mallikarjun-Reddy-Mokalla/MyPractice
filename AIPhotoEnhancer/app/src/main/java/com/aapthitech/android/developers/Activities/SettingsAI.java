@@ -175,11 +175,17 @@ public class SettingsAI extends AppCompatActivity {
     }
 
     private void sendFeedBacktoMail() {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
+     /*   Intent intent = new Intent(Intent.ACTION_VIEW);
         Uri data = Uri.parse("mailto:mallikarjunreddy900@gmail.com?subject= AI Enhancer Feedback ");
         intent.setData(data);
-//        PackageManager packageManager = getPackageManager();
-        startActivity(intent);
+        intent.putExtra(Intent.EXTRA_TEXT, "Dear AI Enhancer Team,\n\nI would like to provide the following feedback:\n\n");
+        startActivity(intent);*/
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"mallikarjunreddy900@gmail.com"});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "AI Enhancer Feedback");
+        intent.putExtra(Intent.EXTRA_TEXT, "Dear AI Enhancer Team,\n\nI would like to provide the following feedback:\n\n");
+        startActivity(Intent.createChooser(intent, "Send Feedback"));
 
     }
 
