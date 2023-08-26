@@ -31,7 +31,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
- import com.aapthitech.android.developers.Editscreen;
+import com.aapthitech.android.developers.Data.RemoteConfig;
+import com.aapthitech.android.developers.Editscreen;
 import com.aapthitech.android.developers.IAP.PremiumScreen;
 import com.aapthitech.android.developers.R;
 import com.aapthitech.android.developers.SaveScreen;
@@ -99,6 +100,14 @@ public class AIEditor extends AppCompatActivity {
         titleText = getIntent().getStringExtra("TITLE");
         effectTitle = getIntent().getStringExtra("TITLE");
         proTag = getIntent().getStringExtra("PRO_TAG");
+        if (RemoteConfig.getRemoteConfig().getEnableIAPflag() != null) {
+            if (RemoteConfig.getRemoteConfig().getEnableIAPflag().equals("true")) {
+                aieditorBinding.proCard.setVisibility(View.VISIBLE);
+            } else {
+                aieditorBinding.proCard.setVisibility(View.GONE);
+
+            }
+        }
         if (titleText != null) {
             aieditorBinding.titleType.setText(titleText);
             aieditorBinding.effectType.setText(titleText);
@@ -109,13 +118,7 @@ public class AIEditor extends AppCompatActivity {
         }
         assert titleText != null;
         pictureType = getIntent().getStringExtra("PICTURE");
-        if (pictureType != null) {
-            if (pictureType.equals("DummyPic")) {
 
-            } else {
-
-            }
-        }
         if (titleText.equals(getString(R.string.enhance))) {
             SUB_URL_NAME = "/superres";
         }
@@ -162,7 +165,7 @@ public class AIEditor extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (pictureType != null) {
-                    if (pictureType.equals("DummyPic")) {
+                    if (pictureType.equals("DemoImages")) {
                         aieditorBinding.nextLayEdit.userImageBCSave.setVisibility(View.VISIBLE);
 //                        aieditorBinding.nextLayEdit.userImageBCSave.setImageDrawable(getDrawable(R.drawable.remove_before_after));
                         aieditorBinding.nextLayEdit.userImageBCSave.setImageBitmap(mainActivity.globalBitmap);
@@ -179,7 +182,7 @@ public class AIEditor extends AppCompatActivity {
         aieditorBinding.proCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AIEditor.this, PremiumScreen.class));
+                startActivity(new Intent(AIEditor.this, PremiumScreen.class).putExtra("PRO_FROM", "AIEDITOR"));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
@@ -209,7 +212,7 @@ public class AIEditor extends AppCompatActivity {
         aieditorBinding.nextLayEdit.lensBlur.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AIEditor.this, Editscreen.class) .putExtra("TITLE", getString(R.string.lens_blur)).putExtra("PRO_TAG", getString(R.string.pro_lens)).putExtra("PICTURE", pictureType));
+                startActivity(new Intent(AIEditor.this, Editscreen.class).putExtra("TITLE", getString(R.string.lens_blur)).putExtra("PRO_TAG", getString(R.string.pro_lens)).putExtra("PICTURE", pictureType));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
@@ -242,7 +245,14 @@ public class AIEditor extends AppCompatActivity {
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
-        commonMethods.loadBannerAd(aieditorBinding.nextLayEdit.bannerEraser, AIEditor.this);
+        if (RemoteConfig.getRemoteConfig() != null) {
+            if (RemoteConfig.getRemoteConfig().getShowbannerAd() != null) {
+                if (RemoteConfig.getRemoteConfig().getShowbannerAd().equals("true")) {
+                    commonMethods.loadBannerAd(aieditorBinding.nextLayEdit.bannerEraser, AIEditor.this);
+
+                }
+            }
+        }
 
 
     }

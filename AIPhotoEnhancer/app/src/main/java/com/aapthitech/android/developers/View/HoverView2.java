@@ -1,4 +1,4 @@
-package com.aapthitech.android.developers;
+package com.aapthitech.android.developers.View;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -20,6 +20,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
+
+import com.aapthitech.android.developers.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

@@ -24,6 +24,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.aapthitech.android.developers.BackgroundChanger;
+import com.aapthitech.android.developers.Data.RemoteConfig;
 import com.aapthitech.android.developers.IAP.PremiumScreen;
 import com.aapthitech.android.developers.R;
 import com.aapthitech.android.developers.databinding.ActivitySettingsAiBinding;
@@ -48,6 +49,17 @@ public class SettingsAI extends AppCompatActivity {
         settingsAiBinding = ActivitySettingsAiBinding.inflate(getLayoutInflater());
         View view = settingsAiBinding.getRoot();
         setContentView(view);
+
+
+        if (RemoteConfig.getRemoteConfig().getEnableIAPflag() != null) {
+            if (RemoteConfig.getRemoteConfig().getEnableIAPflag().equals("true")) {
+                settingsAiBinding.premiumCard.setVisibility(View.VISIBLE);
+
+            } else {
+                settingsAiBinding.premiumCard.setVisibility(View.GONE);
+
+            }
+        }
         settingsAiBinding.onBackSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,7 +69,7 @@ public class SettingsAI extends AppCompatActivity {
         settingsAiBinding.goPremium.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(SettingsAI.this, PremiumScreen.class));
+                startActivity(new Intent(SettingsAI.this, PremiumScreen.class).putExtra("PRO_FROM","SETTINGS"));
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
             }

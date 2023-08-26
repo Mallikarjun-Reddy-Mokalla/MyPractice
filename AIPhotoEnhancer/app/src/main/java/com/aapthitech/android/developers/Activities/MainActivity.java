@@ -39,9 +39,12 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.aapthitech.android.developers.BackgroundChanger;
 import com.aapthitech.android.developers.Creations;
 import com.aapthitech.android.developers.CropActivity;
 import com.aapthitech.android.developers.Data.ActionData;
+import com.aapthitech.android.developers.Data.RemoteConfig;
+import com.aapthitech.android.developers.Editscreen;
 import com.aapthitech.android.developers.IAP.PremiumScreen;
 import com.aapthitech.android.developers.R;
 import com.aapthitech.android.developers.Utils.PhotoData;
@@ -109,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         photoData = new PhotoData(this);
         mainActivity = this;
         Glide.with(this).load(R.drawable.ai_enhancer).into(mainBinding.gifView);// to load the gif file
-        commonMethods.showGoogleAd((Activity) MainActivity.this, MainActivity.this);
+        showInterstitialAdOnLaunch();
 
         /* set card to view to perform the click event */
         mainBinding.removeObj.setParentCardView(mainBinding.removeObjCard);
@@ -131,10 +134,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainBinding.colorizeCard.setOnClickListener(this);
         mainBinding.brighterCard.setOnClickListener(this);
         mainBinding.removeObjCard.setOnClickListener(this);
-        mainBinding.proText.setOnClickListener(new View.OnClickListener() {
+        if (RemoteConfig.getRemoteConfig().getEnableIAPflag() != null) {
+            if (RemoteConfig.getRemoteConfig().getEnableIAPflag().equals("true")) {
+                mainBinding.proLayout.setVisibility(View.VISIBLE);
+
+            } else {
+                mainBinding.proLayout.setVisibility(View.GONE);
+
+            }
+        }
+        mainBinding.proLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, PremiumScreen.class));
+                startActivity(new Intent(MainActivity.this, PremiumScreen.class).putExtra("PRO_FROM","MAIN"));
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
             }
@@ -168,6 +180,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+
+    }
+
+    private void showInterstitialAdOnLaunch() {
+        if (RemoteConfig.getRemoteConfig() != null) {
+            if (RemoteConfig.getRemoteConfig().getShowInterstitial() != null) {
+                if (RemoteConfig.getRemoteConfig().getShowInterstitial().equals("true")) {
+                    if (RemoteConfig.getRemoteConfig().getshowInterstitialOnLaunch() != null) {
+                        if (RemoteConfig.getRemoteConfig().getshowInterstitialOnLaunch().equals("true")) {
+                            commonMethods.showGoogleAd((Activity) MainActivity.this, MainActivity.this);
+                        }
+                    }
+                }
+            }
+        }
 
     }
 
@@ -469,10 +496,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
 
                 Uri uri = convertBitmapToUri(getApplicationContext(), bitmap1);
+                mainActivity.galleryFinalBitmap = bitmap1;
+                mainActivity.universalRealBitmap = bitmap1;
+                mainActivity.globalBitmap = bitmap1;
+
                 if (galCamDialog != null && galCamDialog.isShowing()) {
                     galCamDialog.dismiss();
                 }
-                startCropActivity(uri, "DummyPic", optType);
+                openNewActivityforDemo(uri, "DemoImages", optType);
             }
         });
 
@@ -514,8 +545,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
         bitmap1 = BitmapFactory.decodeResource(getResources(), imageResource);
-        bitmap2 = BitmapFactory.decodeResource(getResources(), imageResource2);
-        bitmap3 = BitmapFactory.decodeResource(getResources(), imageResource3);
+
     }
 
     public Uri convertBitmapToUri(Context context, Bitmap bitmap) {
@@ -589,8 +619,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    /*
-        private void openNewActivity(Uri uri, String type) {
+
+        private void openNewActivityforDemo(Uri uri, String type,String optedAction) {
             switch (optedAction) {
                 case "removeObj":
                     startActivity(new Intent(MainActivity.this, RemoveObject.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type));
@@ -602,19 +632,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     break;
                 case "removeBG":
-                    startActivity(new Intent(MainActivity.this, AIEditor.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type).putExtra("TITLE", getString(R.string.removebg)).putExtra("PRO_TAG", getString(R.string.remove_pro_bg)));
+                    startActivity(new Intent(MainActivity.this, BackgroundChanger.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type).putExtra("TITLE", getString(R.string.removebg)).putExtra("PRO_TAG", getString(R.string.remove_pro_bg)));
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
                     break;
                 case "dehaze":
-                    optedAction = "dehaze";
-                    startActivity(new Intent(MainActivity.this, AIEditor.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type).putExtra("TITLE", getString(R.string.dehaze)).putExtra("PRO_TAG", getString(R.string.pro_dehaze)));
+                    startActivity(new Intent(MainActivity.this, Editscreen.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type).putExtra("TITLE", getString(R.string.dehaze)).putExtra("PRO_TAG", getString(R.string.pro_dehaze)));
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
                     break;
                 case "descratch":
-
-                    startActivity(new Intent(MainActivity.this, AIEditor.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type).putExtra("TITLE", getString(R.string.descratch)).putExtra("PRO_TAG", getString(R.string.pro_descratch)));
+                    startActivity(new Intent(MainActivity.this, Editscreen.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type).putExtra("TITLE", getString(R.string.descratch)).putExtra("PRO_TAG", getString(R.string.pro_descratch)));
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
                     break;
@@ -624,17 +652,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     break;
                 case "lensBlur":
-                    startActivity(new Intent(MainActivity.this, AIEditor.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type).putExtra("TITLE", getString(R.string.lens_blur)).putExtra("PRO_TAG", getString(R.string.pro_lens)));
+                    startActivity(new Intent(MainActivity.this, Editscreen.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type).putExtra("TITLE", getString(R.string.lens_blur)).putExtra("PRO_TAG", getString(R.string.pro_lens)));
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     break;
                 case "colorize":
-                    optedAction = "colorize";
-                    startActivity(new Intent(MainActivity.this, AIEditor.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type).putExtra("TITLE", getString(R.string.colorize)).putExtra("PRO_TAG", getString(R.string.pro_colorize)));
+                     startActivity(new Intent(MainActivity.this, Editscreen.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type).putExtra("TITLE", getString(R.string.colorize)).putExtra("PRO_TAG", getString(R.string.pro_colorize)));
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     break;
                 case "brighten":
-                    optedAction = "brighten";
-                    startActivity(new Intent(MainActivity.this, AIEditor.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type).putExtra("TITLE", getString(R.string.brighten)).putExtra("PRO_TAG", getString(R.string.pro_brighten)));
+                    startActivity(new Intent(MainActivity.this, Editscreen.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type).putExtra("TITLE", getString(R.string.brighten)).putExtra("PRO_TAG", getString(R.string.pro_brighten)));
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     break;
 
@@ -642,7 +668,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         }
-    */
+
     private void openNewActivity(Uri uri, String type) {
         switch (optedAction) {
             case "removeObj":
@@ -686,5 +712,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(new Intent(MainActivity.this, CropActivity.class).putExtra("IMG_DATA", uri.toString()).putExtra("PICTURE", type).putExtra("selectedCard", selectedCard).putExtra("TITLE", getString(R.string.brighten)).putExtra("PRO_TAG", getString(R.string.pro_brighten)));
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
-
 }

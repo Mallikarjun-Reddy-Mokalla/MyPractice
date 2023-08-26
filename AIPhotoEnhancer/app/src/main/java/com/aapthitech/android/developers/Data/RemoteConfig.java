@@ -7,7 +7,7 @@ public class RemoteConfig {
     private String showNativeAdExit;
     private String showNativeAdMain;
     private String showNativeAdSave;
-    private String showInterstitialOnLunach;
+    private String showInterstitialOnLaunch;
     private String showInterstitialOnSave;
     private String showInterstitialapplyFilter;
     private String showInterstitial;
@@ -17,8 +17,17 @@ public class RemoteConfig {
     private String removeObjectApiService;
     private String bgeraserAPI;
     private String cartoonAPI;
+    private String upgradeAppVersion;
 
     public RemoteConfig() {
+    }
+
+    public String getUpgradeAppVersion() {
+        return upgradeAppVersion;
+    }
+
+    public void setUpgradeAppVersion(String upgradeAppVersion) {
+        this.upgradeAppVersion = upgradeAppVersion;
     }
 
     public static RemoteConfig getRemoteConfig() {
@@ -97,12 +106,12 @@ public class RemoteConfig {
         this.showNativeAdSave = showNativeAdSave;
     }
 
-    public String getShowInterstitialOnLunach() {
-        return showInterstitialOnLunach;
+    public String getshowInterstitialOnLaunch() {
+        return showInterstitialOnLaunch;
     }
 
-    public void setShowInterstitialOnLunach(String showInterstitialOnLunach) {
-        this.showInterstitialOnLunach = showInterstitialOnLunach;
+    public void setshowInterstitialOnLaunch(String showInterstitialOnLaunch) {
+        this.showInterstitialOnLaunch = showInterstitialOnLaunch;
     }
 
     public String getShowInterstitialOnSave() {

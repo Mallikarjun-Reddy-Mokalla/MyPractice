@@ -39,7 +39,7 @@ public class CommonMethods {
 
     private String[] bannerAdUnits;
     private int banneradindex = 0;
-    boolean nativeAdLoaded= false;
+    boolean nativeAdLoaded = false;
     public static final CommonMethods commonMethods = new CommonMethods();
 
     public static CommonMethods getInstance() {
@@ -67,6 +67,7 @@ public class CommonMethods {
                     populateUnifiedNativeAdView(nativeAd, adView);
                     frameLayout.removeAllViews();
                     frameLayout.addView(adView);
+
                 }
             });
 
@@ -187,7 +188,7 @@ public class CommonMethods {
     }/*Natvie Ad loaded ended */
 
     /*banner Ads loading with eCPM ids */
-    public void loadBannerAd( FrameLayout adViewContainer, Context context) {
+    public void loadBannerAd(FrameLayout adViewContainer, Context context) {
         AdView adViewBanner;
         if (context != null) {
             bannerAdUnits = new String[]{context.getString(R.string.banner_high), context.getString(R.string.banner_mid), context.getString(R.string.banner_all)};
@@ -210,7 +211,7 @@ public class CommonMethods {
 
                     if (banneradindex < 2) {
                         banneradindex++;
-                        loadBannerAd( adViewContainer, context);
+                        loadBannerAd(adViewContainer, context);
                     }
                 }
 
@@ -258,5 +259,9 @@ public class CommonMethods {
                 splashInstance.loadGoogleAdAllFlor();
             }
         }
+    }
+
+    public void disableAds() {
+
     }
 }

@@ -119,6 +119,14 @@ public class BackgroundChanger extends AppCompatActivity {
             changerBinding.proTagText.setText(proTag);
 
         }
+
+        if (RemoteConfig.getRemoteConfig().getEnableIAPflag() != null) {
+            if (RemoteConfig.getRemoteConfig().getEnableIAPflag().equals("true")) {
+                changerBinding.proCard.setVisibility(View.VISIBLE);
+             } else {
+                changerBinding.proCard.setVisibility(View.GONE);
+              }
+        }
         changerBinding.adsCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,7 +135,7 @@ public class BackgroundChanger extends AppCompatActivity {
 
                 if (changerBinding.userImageBC != null) {
                     if (pictureType != null) {
-                        if (pictureType.equals("DummyPic")) {
+                        if (pictureType.equals("DemoImages")) {
                             changerBinding.nextLaySave.userImageBCSave.setVisibility(View.VISIBLE);
                             changerBinding.nextLaySave.userImageBCSave.setImageBitmap(mainActivity.globalBitmap);
 
@@ -143,7 +151,7 @@ public class BackgroundChanger extends AppCompatActivity {
         changerBinding.proCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(BackgroundChanger.this, PremiumScreen.class));
+                startActivity(new Intent(BackgroundChanger.this, PremiumScreen.class).putExtra("PRO_FROM","BG_CHANGER"));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
             }
@@ -184,7 +192,7 @@ public class BackgroundChanger extends AppCompatActivity {
         changerBinding.nextLaySave.pro3X.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(BackgroundChanger.this, PremiumScreen.class));
+                startActivity(new Intent(BackgroundChanger.this, PremiumScreen.class).putExtra("PRO_FROM","BG_CHANGER"));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
             }
@@ -192,7 +200,7 @@ public class BackgroundChanger extends AppCompatActivity {
         changerBinding.nextLaySave.proLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(BackgroundChanger.this, PremiumScreen.class));
+                startActivity(new Intent(BackgroundChanger.this, PremiumScreen.class).putExtra("PRO_FROM","BG_CHANGER"));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
             }

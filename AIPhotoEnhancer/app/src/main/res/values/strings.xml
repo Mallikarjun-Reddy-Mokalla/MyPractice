@@ -47,6 +47,7 @@
 
     <!-- TEST AD'S eCPM FLORING -->
     <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="app_openad_id" translatable="false">ca-app-pub-3940256099942544/3419835294</string>
 
     <!--interstial Ad id floring-->
     <string name="interstitial_high">ca-app-pub-3940256099942544/1033173712</string>
@@ -69,4 +70,5 @@
 
     <!--END OF TEST ADS -->
     <string name="bottom_sheet_behavior">com.google.android.material.bottomsheet.BottomSheetBehavior</string>
+    <string name="you_can_cancel_your_subcription_any_time">You can cancel your subcription any time</string>
 </resources>

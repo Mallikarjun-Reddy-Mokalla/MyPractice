@@ -16,7 +16,7 @@ import android.widget.SeekBar;
 
 import com.aapthitech.android.developers.BackgroundChanger;
 import com.aapthitech.android.developers.Editscreen;
-import com.aapthitech.android.developers.HoverView2;
+import com.aapthitech.android.developers.View.HoverView2;
 import com.aapthitech.android.developers.R;
 import com.aapthitech.android.developers.databinding.ActivityRemoveObjectBinding;
 

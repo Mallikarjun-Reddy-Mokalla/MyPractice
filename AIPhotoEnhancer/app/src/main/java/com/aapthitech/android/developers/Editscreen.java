@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import com.aapthitech.android.developers.Activities.AIEditor;
 import com.aapthitech.android.developers.Activities.MainActivity;
+import com.aapthitech.android.developers.Data.RemoteConfig;
 import com.aapthitech.android.developers.IAP.PremiumScreen;
 import com.aapthitech.android.developers.TouchEvents.MultiTouchListener2;
 import com.aapthitech.android.developers.databinding.ActivityEditscreenBinding;
@@ -107,11 +108,35 @@ public class Editscreen extends AppCompatActivity {
         if (proTitle != null) {
             editscreenBinding.proTagText.setText(proTitle);
         }
-
+        if (RemoteConfig.getRemoteConfig().getEnableIAPflag() != null) {
+            if (RemoteConfig.getRemoteConfig().getEnableIAPflag().equals("true")) {
+                editscreenBinding.proCard.setVisibility(View.VISIBLE);
+                editscreenBinding.nextSave.proLayout.setVisibility(View.VISIBLE);
+                editscreenBinding.nextSave.pro3X.setVisibility(View.VISIBLE);
+            } else {
+                editscreenBinding.proCard.setVisibility(View.GONE);
+                editscreenBinding.nextSave.proLayout.setVisibility(View.GONE);
+                editscreenBinding.nextSave.pro3X.setVisibility(View.GONE);
+            }
+        }
         editscreenBinding.proCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Editscreen.this, PremiumScreen.class));
+                startActivity(new Intent(Editscreen.this, PremiumScreen.class).putExtra("PRO_FROM","EDITSCREEN"));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+        editscreenBinding.nextSave.pro3X.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Editscreen.this, PremiumScreen.class).putExtra("PRO_FROM","EDITSCREEN"));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+        editscreenBinding.nextSave.proLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Editscreen.this, PremiumScreen.class).putExtra("PRO_FROM","EDITSCREEN"));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
@@ -132,8 +157,25 @@ public class Editscreen extends AppCompatActivity {
             }
         });
         editscreenBinding.userImageEdit.setImageBitmap(mainActivity.globalBitmap);
-        commonMethods.loadBannerAd(editscreenBinding.nextSave.bannerEraser, Editscreen.this);//load banner Ad
+        editscreenBinding.nextSave.onBack2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        /*ads*/
+        showBannerAd();
 
+    }
+
+    private void showBannerAd() {
+        if (RemoteConfig.getRemoteConfig() != null) {
+            if (RemoteConfig.getRemoteConfig().getShowbannerAd() != null) {
+                if (RemoteConfig.getRemoteConfig().getShowbannerAd().equals("true")) {
+                    commonMethods.loadBannerAd(editscreenBinding.nextSave.bannerEraser, Editscreen.this);//load banner Ad
+                }
+            }
+        }
     }
 
     public AnimationSet loadAnimation() {
@@ -164,7 +206,7 @@ public class Editscreen extends AppCompatActivity {
 
     private void getDummyFilterImages() {
         if (pictureType != null) {
-            if (pictureType.equals("DummyPic")) {
+            if (pictureType.equals("DemoImages")) {
                 if (editTitle != null) {
                     if (editTitle.equals(getString(R.string.descratch))) {
                         sampleFilterResource = R.drawable.d_descratch_filter;
@@ -375,12 +417,12 @@ public class Editscreen extends AppCompatActivity {
 
     public static String pathtoSave() {
         String SAVE_PATH = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) ? Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() : Environment.getExternalStorageDirectory().toString();
-        return new File(SAVE_PATH + "/PictureCraft" + "/MyCreations").getPath();
+        return new File(SAVE_PATH + "/AIEnhancer" + "/MyCreations").getPath();
     }
 
     public static String saveCartoonPhoto() {
         String SAVE_PATH = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) ? Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() : Environment.getExternalStorageDirectory().toString();
-        return new File(SAVE_PATH + "/PictureCraft" + "/CartoonPhoto").getPath();
+        return new File(SAVE_PATH + "/AIEnhancer" + "/CartoonPhoto").getPath();
     }
 
     private void addImageGallery(String str) {
