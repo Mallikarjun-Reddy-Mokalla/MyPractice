@@ -1,12 +1,14 @@
 package com.aapthitech.android.developers.Activities;
 
 import static com.aapthitech.android.developers.Activities.MainActivity.mainActivity;
+import static com.aapthitech.android.developers.Data.CommonMethods.commonMethods;
 
 import static java.lang.System.out;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -62,7 +64,8 @@ public class CartoonSelfi extends AppCompatActivity {
     private SaveSheetDialogBinding saveSheetDialogBinding;
     private ServerNotFoundBinding serverNotFoundBinding;
     private Dialog loadingDialog, serverNotFoundDialog;
-    private String BASEURL = "https://toonifime.com/toonifyme";
+    //    private String BASEURL = "https://toonifime.com/toonifyme";
+    private String BASEURL = "";
     private String SUB_URL_NAME = "";
 
     private LoadingBinding loadingBinding;
@@ -87,6 +90,7 @@ public class CartoonSelfi extends AppCompatActivity {
     String pictureType;
     int demoimageResource;
     Bitmap demoCartoonFilterBitmap;
+    private boolean iapFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +104,7 @@ public class CartoonSelfi extends AppCompatActivity {
         title = getIntent().getStringExtra("TITLE");
         proTagTitle = getIntent().getStringExtra("PRO_TAG");
         pictureType = getIntent().getStringExtra("PICTURE");
+        if (pictureType != null) checkPictype(pictureType);
         if (title != null) {
             cartoonSelfiBinding.title.setText(title);
         }
@@ -110,7 +115,9 @@ public class CartoonSelfi extends AppCompatActivity {
         if (RemoteConfig.getRemoteConfig().getEnableIAPflag() != null) {
             if (RemoteConfig.getRemoteConfig().getEnableIAPflag().equals("true")) {
                 cartoonSelfiBinding.proCard.setVisibility(View.VISIBLE);
+                iapFlag = true;
             } else {
+                iapFlag = false;
                 cartoonSelfiBinding.proCard.setVisibility(View.GONE);
             }
         }
@@ -125,23 +132,11 @@ public class CartoonSelfi extends AppCompatActivity {
         cartoonSelfiBinding.adsCardCartoon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cartoonSelfiBinding.cartoonsListLay.setVisibility(View.VISIBLE);
-                cartoonSelfiBinding.saveCartoonLayout.setVisibility(View.VISIBLE);
-                cartoonSelfiBinding.magicSaveToolsLay.setVisibility(View.GONE);
-                cartoonSelfiBinding.proAdLay.setVisibility(View.GONE);
-                if (pictureType != null) {
-                    if (pictureType.equals("DemoImages")) {
-                        demoimageResource = R.drawable.d_cartoon_selfie_filter;
-                        demoCartoonFilterBitmap = BitmapFactory.decodeResource(getResources(), demoimageResource);
-                        if (demoCartoonFilterBitmap != null) {
-                            cartoonSelfiBinding.userImage.setImageBitmap(demoCartoonFilterBitmap);
-                        }
-                    } else {
-                        SUB_URL_NAME = "/caricature";
-                        new ApplyfilterToImageAsyncTask().execute();
-                    }
+                if (showInterstitialAd()) {
+                    performEditing();
+                } else {
+                    performEditing();
                 }
-
             }
         });
         cartoonSelfiBinding.magicCartoonCard.setOnClickListener(new View.OnClickListener() {
@@ -171,6 +166,10 @@ public class CartoonSelfi extends AppCompatActivity {
         cartoonSelfiBinding.erase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mainActivity.globalBitmap = savePhotoFrame();
+                cartoonSelfiBinding.cartoonsListLay.setVisibility(View.VISIBLE);
+                cartoonSelfiBinding.saveCartoonLayout.setVisibility(View.VISIBLE);
+                cartoonSelfiBinding.magicSaveToolsLay.setVisibility(View.GONE);
                 startActivity(new Intent(CartoonSelfi.this, RemoveObject.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -178,6 +177,10 @@ public class CartoonSelfi extends AppCompatActivity {
         cartoonSelfiBinding.enhance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mainActivity.globalBitmap = savePhotoFrame();
+                cartoonSelfiBinding.cartoonsListLay.setVisibility(View.VISIBLE);
+                cartoonSelfiBinding.saveCartoonLayout.setVisibility(View.VISIBLE);
+                cartoonSelfiBinding.magicSaveToolsLay.setVisibility(View.GONE);
                 startActivity(new Intent(CartoonSelfi.this, AIEditor.class).putExtra("PICTURE", pictureType).putExtra("TITLE", getString(R.string.enhance_title)).putExtra("PRO_TAG", getString(R.string.pro_enhance)));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -185,6 +188,10 @@ public class CartoonSelfi extends AppCompatActivity {
         cartoonSelfiBinding.lensBlur.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mainActivity.globalBitmap = savePhotoFrame();
+                cartoonSelfiBinding.cartoonsListLay.setVisibility(View.VISIBLE);
+                cartoonSelfiBinding.saveCartoonLayout.setVisibility(View.VISIBLE);
+                cartoonSelfiBinding.magicSaveToolsLay.setVisibility(View.GONE);
                 startActivity(new Intent(CartoonSelfi.this, Editscreen.class).putExtra("PICTURE", pictureType).putExtra("TITLE", getString(R.string.lens_blur)).putExtra("PRO_TAG", getString(R.string.pro_lens)));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -192,6 +199,10 @@ public class CartoonSelfi extends AppCompatActivity {
         cartoonSelfiBinding.colorize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mainActivity.globalBitmap = savePhotoFrame();
+                cartoonSelfiBinding.cartoonsListLay.setVisibility(View.VISIBLE);
+                cartoonSelfiBinding.saveCartoonLayout.setVisibility(View.VISIBLE);
+                cartoonSelfiBinding.magicSaveToolsLay.setVisibility(View.GONE);
                 startActivity(new Intent(CartoonSelfi.this, Editscreen.class).putExtra("PICTURE", pictureType).putExtra("TITLE", getString(R.string.colorize)).putExtra("PRO_TAG", getString(R.string.pro_colorize)));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -199,6 +210,10 @@ public class CartoonSelfi extends AppCompatActivity {
         cartoonSelfiBinding.brighten.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mainActivity.globalBitmap = savePhotoFrame();
+                cartoonSelfiBinding.cartoonsListLay.setVisibility(View.VISIBLE);
+                cartoonSelfiBinding.saveCartoonLayout.setVisibility(View.VISIBLE);
+                cartoonSelfiBinding.magicSaveToolsLay.setVisibility(View.GONE);
                 startActivity(new Intent(CartoonSelfi.this, Editscreen.class).putExtra("PICTURE", pictureType).putExtra("TITLE", getString(R.string.brighten)).putExtra("PRO_TAG", getString(R.string.pro_brighten)));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -206,6 +221,10 @@ public class CartoonSelfi extends AppCompatActivity {
         cartoonSelfiBinding.dehaze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mainActivity.globalBitmap = savePhotoFrame();
+                cartoonSelfiBinding.cartoonsListLay.setVisibility(View.VISIBLE);
+                cartoonSelfiBinding.saveCartoonLayout.setVisibility(View.VISIBLE);
+                cartoonSelfiBinding.magicSaveToolsLay.setVisibility(View.GONE);
                 startActivity(new Intent(CartoonSelfi.this, Editscreen.class).putExtra("PICTURE", pictureType).putExtra("TITLE", getString(R.string.dehaze)).putExtra("PRO_TAG", getString(R.string.pro_dehaze)));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -213,6 +232,10 @@ public class CartoonSelfi extends AppCompatActivity {
         cartoonSelfiBinding.descratch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mainActivity.globalBitmap = savePhotoFrame();
+                cartoonSelfiBinding.cartoonsListLay.setVisibility(View.VISIBLE);
+                cartoonSelfiBinding.saveCartoonLayout.setVisibility(View.VISIBLE);
+                cartoonSelfiBinding.magicSaveToolsLay.setVisibility(View.GONE);
                 startActivity(new Intent(CartoonSelfi.this, Editscreen.class).putExtra("PICTURE", pictureType).putExtra("TITLE", getString(R.string.descratch)).putExtra("PRO_TAG", getString(R.string.pro_descratch)));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -220,6 +243,10 @@ public class CartoonSelfi extends AppCompatActivity {
         cartoonSelfiBinding.removeBg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mainActivity.globalBitmap = savePhotoFrame();
+                cartoonSelfiBinding.cartoonsListLay.setVisibility(View.VISIBLE);
+                cartoonSelfiBinding.saveCartoonLayout.setVisibility(View.VISIBLE);
+                cartoonSelfiBinding.magicSaveToolsLay.setVisibility(View.GONE);
                 startActivity(new Intent(CartoonSelfi.this, BackgroundChanger.class).putExtra("PICTURE", pictureType).putExtra("TITLE", getString(R.string.removebg)).putExtra("PRO_TAG", getString(R.string.remove_pro_bg)));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -229,6 +256,7 @@ public class CartoonSelfi extends AppCompatActivity {
         cartoonSelfiBinding.proCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mainActivity.globalBitmap = savePhotoFrame();
                 startActivity(new Intent(CartoonSelfi.this, PremiumScreen.class).putExtra("PRO_FROM", "CARTOONSELFI"));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -250,6 +278,9 @@ public class CartoonSelfi extends AppCompatActivity {
         if (saveDialog != null) {
             saveDialog.show();
         }
+        if (!iapFlag) {
+            saveSheetDialogBinding.proCardSave.setVisibility(View.GONE);
+        }
         saveSheetDialogBinding.stillExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -266,13 +297,13 @@ public class CartoonSelfi extends AppCompatActivity {
         saveSheetDialogBinding.saveAdsCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (saveDialog != null) {
-                    if (saveDialog.isShowing()) {
-                        saveDialog.dismiss();
-                        new saveAndGoimag().execute(new Void[0]);
-                    } else {
-                        new saveAndGoimag().execute(new Void[0]);
-                    }
+                if (saveDialog != null && saveDialog.isShowing()) {
+
+                    saveDialog.dismiss();
+                    new saveAndGoimag().execute(new Void[0]);
+
+                } else {
+                    new saveAndGoimag().execute(new Void[0]);
                 }
 
             }
@@ -419,7 +450,11 @@ public class CartoonSelfi extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }*/
-
+            if (RemoteConfig.getRemoteConfig() != null) {
+                if (RemoteConfig.getRemoteConfig().getBaseUrl() != null) {
+                    BASEURL = RemoteConfig.getRemoteConfig().getBaseUrl();
+                }
+            }
             if (BASEURL != null || SUB_URL_NAME != null) {
 
                 try {
@@ -629,9 +664,95 @@ public class CartoonSelfi extends AppCompatActivity {
 
         Intent intent = new Intent(this, SaveScreen.class);
         intent.putExtra("savedImage", savePath);
+        intent.putExtra("PICTURE", pictureType);
+
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
     }
+
+    private boolean showInterstitialAd() {
+        boolean adLoaded = false;
+        if (RemoteConfig.getRemoteConfig() != null && RemoteConfig.getRemoteConfig().getShowInterstitial() != null && RemoteConfig.getRemoteConfig().getShowInterstitialapplyFilter() != null) {
+            if (RemoteConfig.getRemoteConfig().getShowInterstitial().equals("true") && RemoteConfig.getRemoteConfig().getShowInterstitialapplyFilter().equals("true")) {
+                adLoaded = commonMethods.displayInterstitialAd((Activity) CartoonSelfi.this, CartoonSelfi.this);
+            }
+        }
+        return adLoaded;
+    }
+
+    private void checkPictype(String pictureType) {
+        if (!pictureType.equals("DemoImages")) {
+            cartoonSelfiBinding.erase.setVisibility(View.GONE);
+            cartoonSelfiBinding.lensBlur.setVisibility(View.GONE);
+            cartoonSelfiBinding.brighten.setVisibility(View.GONE);
+            cartoonSelfiBinding.colorize.setVisibility(View.GONE);
+            cartoonSelfiBinding.descratch.setVisibility(View.GONE);
+            cartoonSelfiBinding.dehaze.setVisibility(View.GONE);
+            cartoonSelfiBinding.cartoon.setVisibility(View.VISIBLE);
+            cartoonSelfiBinding.enhance.setVisibility(View.VISIBLE);
+            cartoonSelfiBinding.removeBg.setVisibility(View.VISIBLE);
+        } else {
+            cartoonSelfiBinding.erase.setVisibility(View.GONE);
+            cartoonSelfiBinding.lensBlur.setVisibility(View.GONE);
+            cartoonSelfiBinding.brighten.setVisibility(View.GONE);
+            cartoonSelfiBinding.colorize.setVisibility(View.GONE);
+            cartoonSelfiBinding.descratch.setVisibility(View.GONE);
+            cartoonSelfiBinding.dehaze.setVisibility(View.GONE);
+            cartoonSelfiBinding.cartoon.setVisibility(View.VISIBLE);
+            cartoonSelfiBinding.enhance.setVisibility(View.VISIBLE);
+            cartoonSelfiBinding.removeBg.setVisibility(View.VISIBLE);
+
+        }
+    }
+
+    private boolean showBannerAd() {
+        boolean banner = false;
+        if (RemoteConfig.getRemoteConfig() != null) {
+            if (RemoteConfig.getRemoteConfig().getShowbannerAd() != null) {
+                if (RemoteConfig.getRemoteConfig().getShowbannerAd().equals("true")) {
+                    cartoonSelfiBinding.bannerCartoon.setVisibility(View.VISIBLE);
+                    banner = true;
+                    commonMethods.loadBannerAd(cartoonSelfiBinding.bannerCartoon, CartoonSelfi.this);
+
+                }
+            }
+        }
+        return banner;
+    }
+
+    private void performEditing() {
+        if (showBannerAd()) {
+            cartoonSelfiBinding.bannerCartoon.setVisibility(View.VISIBLE);
+
+        } else {
+            cartoonSelfiBinding.bannerCartoon.setVisibility(View.GONE);
+
+        }
+        cartoonSelfiBinding.cartoonsListLay.setVisibility(View.VISIBLE);
+        cartoonSelfiBinding.saveCartoonLayout.setVisibility(View.VISIBLE);
+        cartoonSelfiBinding.magicSaveToolsLay.setVisibility(View.GONE);
+        cartoonSelfiBinding.proAdLay.setVisibility(View.GONE);
+        if (pictureType != null) {
+            if (pictureType.equals("DemoImages")) {
+                demoimageResource = R.drawable.d_cartoon_selfie_filter;
+                demoCartoonFilterBitmap = BitmapFactory.decodeResource(getResources(), demoimageResource);
+                if (demoCartoonFilterBitmap != null) {
+                    cartoonSelfiBinding.userImage.setImageBitmap(demoCartoonFilterBitmap);
+                }
+            } else {
+                SUB_URL_NAME = "/caricature";
+                new ApplyfilterToImageAsyncTask().execute();
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+    }
+
 
 }

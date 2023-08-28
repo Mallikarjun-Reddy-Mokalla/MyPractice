@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -42,7 +43,6 @@ import com.aapthitech.android.developers.Data.RemoteConfig;
 import com.aapthitech.android.developers.IAP.PremiumScreen;
 import com.aapthitech.android.developers.TouchEvents.MultiTouchListener2;
 import com.aapthitech.android.developers.databinding.ActivityBackgroundChangerBinding;
-import com.aapthitech.android.developers.databinding.ExitSheetDialogBinding;
 import com.aapthitech.android.developers.databinding.LoadingBinding;
 import com.aapthitech.android.developers.databinding.SaveSheetDialogBinding;
 import com.aapthitech.android.developers.databinding.ServerNotFoundBinding;
@@ -95,6 +95,10 @@ public class BackgroundChanger extends AppCompatActivity {
 
     private String pictureType;
 
+    private Bitmap sampleFilterBitmap;
+    private int sampleFilterResource;
+    private boolean iapFlag = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +111,7 @@ public class BackgroundChanger extends AppCompatActivity {
         effectTitle = getIntent().getStringExtra("TITLE");
         proTag = getIntent().getStringExtra("PRO_TAG");
         pictureType = getIntent().getStringExtra("PICTURE");
+        if (pictureType != null) checkPictype(pictureType);
 
         changerBinding.userImageBC.setImageBitmap(mainActivity.globalBitmap);
         changerBinding.nextLaySave.userImageBCSave.setImageBitmap(mainActivity.globalBitmap);
@@ -119,14 +124,7 @@ public class BackgroundChanger extends AppCompatActivity {
             changerBinding.proTagText.setText(proTag);
 
         }
-
-        if (RemoteConfig.getRemoteConfig().getEnableIAPflag() != null) {
-            if (RemoteConfig.getRemoteConfig().getEnableIAPflag().equals("true")) {
-                changerBinding.proCard.setVisibility(View.VISIBLE);
-             } else {
-                changerBinding.proCard.setVisibility(View.GONE);
-              }
-        }
+        checkIapFlag();
         changerBinding.adsCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,11 +134,24 @@ public class BackgroundChanger extends AppCompatActivity {
                 if (changerBinding.userImageBC != null) {
                     if (pictureType != null) {
                         if (pictureType.equals("DemoImages")) {
-                            changerBinding.nextLaySave.userImageBCSave.setVisibility(View.VISIBLE);
-                            changerBinding.nextLaySave.userImageBCSave.setImageBitmap(mainActivity.globalBitmap);
+                            sampleFilterResource = R.drawable.d_remove_bg_filter;
+                            sampleFilterBitmap = BitmapFactory.decodeResource(getResources(), sampleFilterResource);
+                            if (sampleFilterBitmap != null)
+                                mainActivity.globalBitmap = sampleFilterBitmap;
+                            if (showInterstitialAd()) {
+                                changerBinding.nextLaySave.userImageBCSave.setVisibility(View.VISIBLE);
+                                changerBinding.nextLaySave.userImageBCSave.setImageBitmap(mainActivity.globalBitmap);
+                            } else {
+                                changerBinding.nextLaySave.userImageBCSave.setVisibility(View.VISIBLE);
+                                changerBinding.nextLaySave.userImageBCSave.setImageBitmap(mainActivity.globalBitmap);
+                            }
 
                         } else {
-                            new ApplyfilterToImageAsyncTask().execute();
+                            if (showInterstitialAd()) {
+                                new ApplyfilterToImageAsyncTask().execute();
+                            } else {
+                                new ApplyfilterToImageAsyncTask().execute();
+                            }
                         }
                     }
                 } else {
@@ -151,7 +162,7 @@ public class BackgroundChanger extends AppCompatActivity {
         changerBinding.proCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(BackgroundChanger.this, PremiumScreen.class).putExtra("PRO_FROM","BG_CHANGER"));
+                startActivity(new Intent(BackgroundChanger.this, PremiumScreen.class).putExtra("PRO_FROM", "BG_CHANGER"));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
             }
@@ -192,7 +203,7 @@ public class BackgroundChanger extends AppCompatActivity {
         changerBinding.nextLaySave.pro3X.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(BackgroundChanger.this, PremiumScreen.class).putExtra("PRO_FROM","BG_CHANGER"));
+                startActivity(new Intent(BackgroundChanger.this, PremiumScreen.class).putExtra("PRO_FROM", "BG_CHANGER"));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
             }
@@ -200,20 +211,25 @@ public class BackgroundChanger extends AppCompatActivity {
         changerBinding.nextLaySave.proLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(BackgroundChanger.this, PremiumScreen.class).putExtra("PRO_FROM","BG_CHANGER"));
+                startActivity(new Intent(BackgroundChanger.this, PremiumScreen.class).putExtra("PRO_FROM", "BG_CHANGER"));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
             }
         });
 
-        multiTouchListener2m = new MultiTouchListener2(changerBinding.userImageBC, BackgroundChanger.this);
+        multiTouchListener2m = new
+
+                MultiTouchListener2(changerBinding.userImageBC, BackgroundChanger.this);
         changerBinding.userImageBC.setOnTouchListener(multiTouchListener2m);
-        multiTouchListener2m = new MultiTouchListener2(changerBinding.nextLaySave.userImageBCSave, BackgroundChanger.this);
+        multiTouchListener2m = new
+
+                MultiTouchListener2(changerBinding.nextLaySave.userImageBCSave, BackgroundChanger.this);
         changerBinding.nextLaySave.userImageBCSave.setOnTouchListener(multiTouchListener2m);
         changerBinding.nextLaySave.comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(BackgroundChanger.this, FeedBack.class));
+
+                startActivity(new Intent(BackgroundChanger.this, FeedBack.class).putExtra("INTENT_FROM", "BG_ERASER"));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
             }
@@ -223,69 +239,101 @@ public class BackgroundChanger extends AppCompatActivity {
         changerBinding.nextLaySave.tabLayouts.setupWithViewPager(changerBinding.nextLaySave.viewPagers);
         commonMethods.loadBannerAd(changerBinding.nextLaySave.bannerEraser, BackgroundChanger.this);
         changerBinding.nextLaySave.removeBg.setVisibility(View.GONE);//
-         changerBinding.nextLaySave.cartoon.setOnClickListener(new View.OnClickListener() {
+        changerBinding.nextLaySave.cartoon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(BackgroundChanger.this, CartoonSelfi.class)
-                        .putExtra("TITLE", getString(R.string.cartton)).putExtra("PRO_TAG", getString(R.string.pro_cartoon)).putExtra("PICTURE", pictureType));
+                Bitmap bitmap = savePhotoFrame();
+                mainActivity.globalBitmap = bitmap;
+                startActivity(new Intent(BackgroundChanger.this, CartoonSelfi.class).putExtra("TITLE", getString(R.string.cartton)).putExtra("PRO_TAG", getString(R.string.pro_cartoon)).putExtra("PICTURE", pictureType));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
         changerBinding.nextLaySave.erase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    startActivity(new Intent(BackgroundChanger.this, RemoveObject.class).putExtra("PICTURE", pictureType));
+                Bitmap bitmap = savePhotoFrame();
+                mainActivity.globalBitmap = bitmap;
+                startActivity(new Intent(BackgroundChanger.this, RemoveObject.class).putExtra("PICTURE", pictureType));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
         changerBinding.nextLaySave.enhance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 startActivity(new Intent(BackgroundChanger.this, AIEditor.class)
-                         .putExtra("TITLE", getString(R.string.enhance_title)).putExtra("PRO_TAG", getString(R.string.pro_enhance)).putExtra("PICTURE", pictureType));
+                Bitmap bitmap = savePhotoFrame();
+                mainActivity.globalBitmap = bitmap;
+                startActivity(new Intent(BackgroundChanger.this, AIEditor.class).putExtra("TITLE", getString(R.string.enhance_title)).putExtra("PRO_TAG", getString(R.string.pro_enhance)).putExtra("PICTURE", pictureType));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
         changerBinding.nextLaySave.lensBlur.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(BackgroundChanger.this,Editscreen.class)
-                        .putExtra("TITLE", getString(R.string.lens_blur)).putExtra("PRO_TAG", getString(R.string.pro_lens)).putExtra("PICTURE", pictureType));
+                Bitmap bitmap = savePhotoFrame();
+                mainActivity.globalBitmap = bitmap;
+                startActivity(new Intent(BackgroundChanger.this, Editscreen.class).putExtra("TITLE", getString(R.string.lens_blur)).putExtra("PRO_TAG", getString(R.string.pro_lens)).putExtra("PICTURE", pictureType));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
         changerBinding.nextLaySave.colorize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(BackgroundChanger.this, Editscreen.class)
-                        .putExtra("TITLE", getString(R.string.colorize)).putExtra("PRO_TAG", getString(R.string.pro_colorize)).putExtra("PICTURE", pictureType));
+                Bitmap bitmap = savePhotoFrame();
+                mainActivity.globalBitmap = bitmap;
+                startActivity(new Intent(BackgroundChanger.this, Editscreen.class).putExtra("TITLE", getString(R.string.colorize)).putExtra("PRO_TAG", getString(R.string.pro_colorize)).putExtra("PICTURE", pictureType));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
         changerBinding.nextLaySave.brighten.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(BackgroundChanger.this, Editscreen.class)
-                        .putExtra("TITLE", getString(R.string.brighten)).putExtra("PRO_TAG", getString(R.string.pro_brighten)).putExtra("PICTURE", pictureType));
+                Bitmap bitmap = savePhotoFrame();
+                mainActivity.globalBitmap = bitmap;
+                startActivity(new Intent(BackgroundChanger.this, Editscreen.class).putExtra("TITLE", getString(R.string.brighten)).putExtra("PRO_TAG", getString(R.string.pro_brighten)).putExtra("PICTURE", pictureType));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
         changerBinding.nextLaySave.dehaze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(BackgroundChanger.this, Editscreen.class)
-                        .putExtra("TITLE", getString(R.string.dehaze)).putExtra("PRO_TAG", getString(R.string.pro_dehaze)).putExtra("PICTURE", pictureType));
+                Bitmap bitmap = savePhotoFrame();
+                mainActivity.globalBitmap = bitmap;
+                startActivity(new Intent(BackgroundChanger.this, Editscreen.class).putExtra("TITLE", getString(R.string.dehaze)).putExtra("PRO_TAG", getString(R.string.pro_dehaze)).putExtra("PICTURE", pictureType));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
         changerBinding.nextLaySave.descratch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bitmap bitmap = savePhotoFrame();
+                mainActivity.globalBitmap = bitmap;
                 startActivity(new Intent(BackgroundChanger.this, Editscreen.class).putExtra("PICTURE", pictureType).putExtra("TITLE", getString(R.string.descratch)).putExtra("PRO_TAG", getString(R.string.pro_descratch)));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
 
+    }
+
+    private void checkPictype(String pictureType) {
+        if (!pictureType.equals("DemoImages")) {
+            changerBinding.nextLaySave.erase.setVisibility(View.GONE);
+            changerBinding.nextLaySave.lensBlur.setVisibility(View.GONE);
+            changerBinding.nextLaySave.brighten.setVisibility(View.GONE);
+            changerBinding.nextLaySave.colorize.setVisibility(View.GONE);
+            changerBinding.nextLaySave.descratch.setVisibility(View.GONE);
+            changerBinding.nextLaySave.dehaze.setVisibility(View.GONE);
+            changerBinding.nextLaySave.cartoon.setVisibility(View.VISIBLE);
+            changerBinding.nextLaySave.enhance.setVisibility(View.VISIBLE);
+        } else {
+            changerBinding.nextLaySave.erase.setVisibility(View.GONE);
+            changerBinding.nextLaySave.lensBlur.setVisibility(View.GONE);
+            changerBinding.nextLaySave.brighten.setVisibility(View.GONE);
+            changerBinding.nextLaySave.colorize.setVisibility(View.GONE);
+            changerBinding.nextLaySave.descratch.setVisibility(View.GONE);
+            changerBinding.nextLaySave.dehaze.setVisibility(View.GONE);
+            changerBinding.nextLaySave.cartoon.setVisibility(View.VISIBLE);
+            changerBinding.nextLaySave.enhance.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setupViewPager(ViewPager viewPagers) {
@@ -306,6 +354,9 @@ public class BackgroundChanger extends AppCompatActivity {
         if (saveDialog != null) {
             saveDialog.show();
         }
+        if (!iapFlag) {
+            saveSheetDialogBinding.proCardSave.setVisibility(View.GONE);
+        }
         saveSheetDialogBinding.stillExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -320,11 +371,25 @@ public class BackgroundChanger extends AppCompatActivity {
                 }
             }
         });
+        saveSheetDialogBinding.proCardSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainActivity.globalBitmap = savePhotoFrame();
+                startActivity(new Intent(BackgroundChanger.this, PremiumScreen.class).putExtra("PRO_FROM", "BG_CHANGER"));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
         saveSheetDialogBinding.saveAdsCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (saveDialog != null && saveDialog.isShowing()) {
+                    saveDialog.dismiss();
+                    new saveAndGoimag().execute(new Void[0]);
 
-                new saveAndGoimag().execute(new Void[0]);
+                } else {
+                    new saveAndGoimag().execute(new Void[0]);
+                }
+
             }
         });
 
@@ -638,6 +703,7 @@ public class BackgroundChanger extends AppCompatActivity {
     private void openSaveActivity() {
         Intent intent = new Intent(this, SaveScreen.class);
         intent.putExtra("savedImage", savePath);
+        intent.putExtra("PICTURE", pictureType);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
@@ -659,5 +725,37 @@ public class BackgroundChanger extends AppCompatActivity {
         contentValues.put("_data", str);
         contentValues.put("mime_type", "image/jpeg");
         getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+    }
+
+    private boolean showInterstitialAd() {
+        boolean adLoaded = false;
+        if (RemoteConfig.getRemoteConfig() != null && RemoteConfig.getRemoteConfig().getShowInterstitial() != null && RemoteConfig.getRemoteConfig().getShowInterstitialapplyFilter() != null) {
+            if (RemoteConfig.getRemoteConfig().getShowInterstitial().equals("true") && RemoteConfig.getRemoteConfig().getShowInterstitialapplyFilter().equals("true")) {
+                adLoaded = commonMethods.displayInterstitialAd((Activity) BackgroundChanger.this, BackgroundChanger.this);
+            }
+        }
+        return adLoaded;
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
+    private void checkIapFlag() {
+        if (RemoteConfig.getRemoteConfig().getEnableIAPflag() != null && RemoteConfig.getRemoteConfig().getEnableIAPflag().equals("true")) {
+            changerBinding.nextLaySave.xCard.setPadding(5, 5, 30, 5);
+            changerBinding.nextLaySave.proLayout.setVisibility(View.VISIBLE);
+            changerBinding.nextLaySave.pro3X.setVisibility(View.VISIBLE);
+            iapFlag = true;
+
+        } else {
+            iapFlag = false;
+            changerBinding.nextLaySave.xCard.setPadding(5, 5, 5, 5);
+            changerBinding.nextLaySave.proLayout.setVisibility(View.GONE);
+            changerBinding.nextLaySave.pro3X.setVisibility(View.GONE);
+        }
     }
 }

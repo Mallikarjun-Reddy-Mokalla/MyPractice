@@ -11,6 +11,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.aapthitech.android.developers.Activities.AIEditor;
+import com.aapthitech.android.developers.Activities.CartoonSelfi;
+import com.aapthitech.android.developers.Activities.MainActivity;
+import com.aapthitech.android.developers.Activities.SettingsAI;
+import com.aapthitech.android.developers.BackgroundChanger;
+import com.aapthitech.android.developers.Editscreen;
 import com.android.billingclient.api.AcknowledgePurchaseParams;
 import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
 import com.android.billingclient.api.BillingClient;
@@ -38,17 +44,18 @@ public class BillingSubscription implements PurchasesUpdatedListener {
     public static SharedPreferences sharedPrefs;
     public static SharedPreferences.Editor editors;
     private String planChoosen;
-    private String fromActivity;
+    public String fromActivity;
 
     public BillingSubscription(Context context, Activity activity) {
         this.context = context;
         this.activity = activity;
-         sharedPrefs = context.getSharedPreferences("SUBSCRIBE", Context.MODE_PRIVATE);
+        sharedPrefs = context.getSharedPreferences("SUBSCRIBE", Context.MODE_PRIVATE);
         editors = sharedPrefs.edit();
     }
 
-    public void getBillingConnection(Context mcontext, String produtID,String fromScreen) {
+    public void getBillingConnection(Context mcontext, String produtID, String fromScreen) {
         context = mcontext;
+        fromActivity = fromScreen;
         billingClient = BillingClient.newBuilder(mcontext).setListener(this).enablePendingPurchases().build();
         billingClient.startConnection(new BillingClientStateListener() {
             @Override
@@ -94,42 +101,7 @@ public class BillingSubscription implements PurchasesUpdatedListener {
                 .setProductDetails(productDetails)
                 .setOfferToken(offerToken)
                 .build());
-
-     /*   susName = productDetails.getName();
-        description = productDetails.getDescription();
-        formattedprice = productDetails.getSubscriptionOfferDetails().get(0).getPricingPhases().getPricingPhaseList().get(0).getFormattedPrice();
-        billingPeriod = productDetails.getSubscriptionOfferDetails().get(0).getPricingPhases().getPricingPhaseList().get(0).getBillingPeriod();
-        recurrenceMode = productDetails.getSubscriptionOfferDetails().get(0).getPricingPhases().getPricingPhaseList().get(0).getRecurrenceMode();
-        bP = billingPeriod;
-        n = billingPeriod.substring(1, 2);
-        duration = billingPeriod.substring(2, 3);
-        if (recurrenceMode == 2) {
-            if (duration.equals("M")) {
-                dur = "For" + n + "Month";
-            } else if (duration.equals("Y")) {
-                dur = "For" + n + "Year";
-            } else if (duration.equals("W")) {
-                dur = "For" + n + "Week";
-            }
-        } else {
-            if (bP.equals("P1M")) {
-                dur = "/Monthly";
-            } else if (bP.equals("P1Y")) {
-                dur = "/Yearly";
-            } else if (bP.equals("P1W")) {
-                dur = "/Weekly";
-            }
-        }
-        String phase = formattedprice+""+dur;
-        for (int i= 0;i<productDetails.getSubscriptionOfferDetails().get(0).getPricingPhases().getPricingPhaseList().size();i++){
-            if (i>0){
-                String period= productDetails.getSubscriptionOfferDetails().get(0).getPricingPhases().getPricingPhaseList().get(i).getBillingPeriod();
-                String price = productDetails.getSubscriptionOfferDetails().get(0).getPricingPhases().getPricingPhaseList().get(i).getFormattedPrice();
-            }
-        }*/
         BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder().setProductDetailsParamsList(productDetailsParamsList).build();
-
-// Launch the billing flow
         billingResult = billingClient.launchBillingFlow((Activity) context, billingFlowParams);
     }
 
@@ -174,31 +146,27 @@ public class BillingSubscription implements PurchasesUpdatedListener {
                                 editors.putBoolean("GO_PREMIUM", true);
                                 editors.apply();
                                 commonMethods.disableAds();
-
-//                                context.startActivity(new Intent(context, HomeActivity.class));
+                                updateAppToPremium(fromActivity, context);
                             } else if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED && !purchase.isAutoRenewing()) {
                                 editors.putBoolean("GO_PREMIUM", true);
                                 editors.apply();
                                 commonMethods.disableAds();
+                                updateAppToPremium(fromActivity,context);
 
-//                                context.startActivity(new Intent(context, HomeActivity.class));
 
                             } else {
                                 if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
                                     editors.putBoolean("GO_PREMIUM", true);
                                     editors.apply();
                                     commonMethods.disableAds();
-
-//                                    context.startActivity(new Intent(context, HomeActivity.class));
-
+                                    updateAppToPremium(fromActivity, context);
                                 }
                             }
-
 
                         } else {
                             editors.putBoolean("GO_PREMIUM", false);
                             editors.apply();
-//                            context.startActivity(new Intent(context, HomeActivity.class));
+                            updateAppToPremium(fromActivity, context);
 
                         }
                     }
@@ -241,8 +209,37 @@ public class BillingSubscription implements PurchasesUpdatedListener {
                 });
             }
         });
-
     }
 
+    private void updateAppToPremium(String initfrom, Context context) {
+        switch (initfrom) {
+            case "AIEDITOR":
+                context.startActivity(new Intent(context, AIEditor.class));
+                ((Activity) context).finish();
+                 break;
+            case "CARTOONSELFI":
+                context.startActivity(new Intent(context, CartoonSelfi.class));
+                ((Activity) context).finish();
+                break;
+            case "MAIN":
+                context.startActivity(new Intent(context, MainActivity.class));
+                ((Activity) context).finish();
+                break;
+            case "SETTINGS":
+                context.startActivity(new Intent(context, SettingsAI.class));
+                ((Activity) context).finish();
+                break;
+            case "BG_CHANGER":
+                context.startActivity(new Intent(context, BackgroundChanger.class));
+                ((Activity) context).finish();
+                break;
+            case "EDITSCREEN":
+                context.startActivity(new Intent(context, Editscreen.class));
+                ((Activity) context).finish();
+                break;
 
+
+        }
+
+    }
 }

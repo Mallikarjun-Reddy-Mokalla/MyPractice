@@ -26,7 +26,7 @@ public class PremiumScreen extends AppCompatActivity {
         premiumScreenBinding = ActivityPremiumScreenBinding.inflate(getLayoutInflater());
         View view = premiumScreenBinding.getRoot();
         setContentView(view);
-        fromAct = getIntent().getStringExtra("FROM");
+        fromAct = getIntent().getStringExtra("PRO_FROM");
         billingSubscription = new BillingSubscription(PremiumScreen.this, PremiumScreen.this);
 
         Glide.with(this).load(R.drawable.premium_screen_slide).into(premiumScreenBinding.videoGif);// to load the gif file
@@ -68,7 +68,7 @@ public class PremiumScreen extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
     }
 }

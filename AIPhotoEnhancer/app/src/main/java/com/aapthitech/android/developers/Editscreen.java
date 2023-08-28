@@ -8,6 +8,7 @@ import static java.lang.System.out;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -35,7 +36,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aapthitech.android.developers.Activities.AIEditor;
+import com.aapthitech.android.developers.Activities.CartoonSelfi;
+import com.aapthitech.android.developers.Activities.FeedBack;
 import com.aapthitech.android.developers.Activities.MainActivity;
+import com.aapthitech.android.developers.Activities.RemoveObject;
 import com.aapthitech.android.developers.Data.RemoteConfig;
 import com.aapthitech.android.developers.IAP.PremiumScreen;
 import com.aapthitech.android.developers.TouchEvents.MultiTouchListener2;
@@ -59,7 +63,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class Editscreen extends AppCompatActivity {
+public class Editscreen extends AppCompatActivity implements View.OnClickListener {
     ActivityEditscreenBinding editscreenBinding;
     String editTitle;
     String proTitle;
@@ -88,9 +92,11 @@ public class Editscreen extends AppCompatActivity {
         this.imagePath = imagePath;
     }
 
-    public Bitmap sampleFilterBitmap;
     String pictureType;
-    int sampleFilterResource;
+
+    private Bitmap sampleFilterBitmap;
+    private int sampleFilterResource;
+    private boolean iapFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,21 +128,21 @@ public class Editscreen extends AppCompatActivity {
         editscreenBinding.proCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Editscreen.this, PremiumScreen.class).putExtra("PRO_FROM","EDITSCREEN"));
+                startActivity(new Intent(Editscreen.this, PremiumScreen.class).putExtra("PRO_FROM", "EDITSCREEN"));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
         editscreenBinding.nextSave.pro3X.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Editscreen.this, PremiumScreen.class).putExtra("PRO_FROM","EDITSCREEN"));
+                startActivity(new Intent(Editscreen.this, PremiumScreen.class).putExtra("PRO_FROM", "EDITSCREEN"));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
         editscreenBinding.nextSave.proLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Editscreen.this, PremiumScreen.class).putExtra("PRO_FROM","EDITSCREEN"));
+                startActivity(new Intent(Editscreen.this, PremiumScreen.class).putExtra("PRO_FROM", "EDITSCREEN"));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
@@ -147,7 +153,11 @@ public class Editscreen extends AppCompatActivity {
                 AnimationSet animate = loadAnimation();
                 editscreenBinding.appBarEdit.setVisibility(View.GONE);
                 editscreenBinding.nextSave.nextLayLoad.setVisibility(View.VISIBLE);
-                getDummyFilterImages();
+                if (showInterstitialAd()) {
+                    getDummyFilterImages();
+                } else {
+                    getDummyFilterImages();
+                }
             }
         });
         editscreenBinding.nextSave.saveCard.setOnClickListener(new View.OnClickListener() {
@@ -163,6 +173,19 @@ public class Editscreen extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        /*magic layout Edit Click events */
+        editscreenBinding.nextSave.tabClose.setOnClickListener(this);
+        editscreenBinding.nextSave.enhance.setOnClickListener(this);
+        editscreenBinding.nextSave.removeBg.setOnClickListener(this);
+        editscreenBinding.nextSave.cartoon.setOnClickListener(this);
+        editscreenBinding.nextSave.descratch.setOnClickListener(this);
+        editscreenBinding.nextSave.erase.setOnClickListener(this);
+        editscreenBinding.nextSave.lensBlur.setOnClickListener(this);
+        editscreenBinding.nextSave.colorize.setOnClickListener(this);
+        editscreenBinding.nextSave.brighten.setOnClickListener(this);
+        editscreenBinding.nextSave.dehaze.setOnClickListener(this);
+        editscreenBinding.nextSave.comment.setOnClickListener(this);
+
         /*ads*/
         showBannerAd();
 
@@ -178,6 +201,24 @@ public class Editscreen extends AppCompatActivity {
         }
     }
 
+    private boolean showInterstitialAd() {
+        boolean ads = false;
+        if (RemoteConfig.getRemoteConfig() != null) {
+            if (RemoteConfig.getRemoteConfig().getShowInterstitial() != null) {
+                if (RemoteConfig.getRemoteConfig().getShowInterstitial().equals("true")) {
+                    if (RemoteConfig.getRemoteConfig().getShowInterstitialapplyFilter() != null) {
+                        if (RemoteConfig.getRemoteConfig().getShowInterstitialapplyFilter().equals("true")) {
+                            ads = true;
+                            commonMethods.showGoogleAd((Activity) Editscreen.this, Editscreen.this);
+                            return ads;
+                        }
+                    }
+                }
+            }
+        }
+        return ads;
+    }
+
     public AnimationSet loadAnimation() {
 
 // For hiding the appBarEdit view with a fade-out animation
@@ -190,8 +231,7 @@ public class Editscreen extends AppCompatActivity {
         Animation fadeInAnimation = new AlphaAnimation(0.0f, 1.0f);
         fadeInAnimation.setDuration(300); // Adjust the duration as needed
 
-        Animation scaleUpAnimation = new ScaleAnimation(
-                0.5f, 1.0f, // X-axis scaling
+        Animation scaleUpAnimation = new ScaleAnimation(0.5f, 1.0f, // X-axis scaling
                 0.5f, 1.0f, // Y-axis scaling
                 Animation.RELATIVE_TO_SELF, 0.5f, // Pivot point X
                 Animation.RELATIVE_TO_SELF, 0.5f  // Pivot point Y
@@ -207,27 +247,24 @@ public class Editscreen extends AppCompatActivity {
     private void getDummyFilterImages() {
         if (pictureType != null) {
             if (pictureType.equals("DemoImages")) {
+
+                editscreenBinding.nextSave.magicToolsLayout.setVisibility(View.GONE);
                 if (editTitle != null) {
                     if (editTitle.equals(getString(R.string.descratch))) {
                         sampleFilterResource = R.drawable.d_descratch_filter;
                         sampleFilterBitmap = BitmapFactory.decodeResource(getResources(), sampleFilterResource);
-
                     } else if (editTitle.equals(getString(R.string.lens_blur))) {
                         sampleFilterResource = R.drawable.d_lens_blur_filter;
                         sampleFilterBitmap = BitmapFactory.decodeResource(getResources(), sampleFilterResource);
-
                     } else if (editTitle.equals(getString(R.string.colorize))) {
                         sampleFilterResource = R.drawable.d_colorize_filter;
                         sampleFilterBitmap = BitmapFactory.decodeResource(getResources(), sampleFilterResource);
-
                     } else if (editTitle.equals(getString(R.string.brighten))) {
                         sampleFilterResource = R.drawable.d_brighten_filter;
                         sampleFilterBitmap = BitmapFactory.decodeResource(getResources(), sampleFilterResource);
-
                     } else if (editTitle.equals(getString(R.string.dehaze))) {
                         sampleFilterResource = R.drawable.d_dehaze_filter;
                         sampleFilterBitmap = BitmapFactory.decodeResource(getResources(), sampleFilterResource);
-
                     } else {
                         //setting the bitmap
                         editscreenBinding.userImageEdit.setImageBitmap(mainActivity.globalBitmap);
@@ -244,7 +281,7 @@ public class Editscreen extends AppCompatActivity {
                 }
 
             } else {
-//                        new ApplyfilterToImageAsyncTask().execute();
+                new ApplyfilterToImageAsyncTask().execute();
             }
         }
     }
@@ -261,6 +298,9 @@ public class Editscreen extends AppCompatActivity {
 
         if (saveDialog != null) {
             saveDialog.show();
+        }
+        if (!iapFlag) {
+            saveSheetDialogBinding.proCardSave.setVisibility(View.GONE);
         }
         saveSheetDialogBinding.stillExit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -296,6 +336,7 @@ public class Editscreen extends AppCompatActivity {
 
         new ApplyfilterToImageAsyncTask().execute();
     }
+
 
     public class saveAndGoimag extends AsyncTask<Void, Void, String> {
         @Override
@@ -445,6 +486,7 @@ public class Editscreen extends AppCompatActivity {
     private void openSaveActivity() {
         Intent intent = new Intent(this, SaveScreen.class);
         intent.putExtra("savedImage", savePath);
+        intent.putExtra("PICTURE", pictureType);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
@@ -652,6 +694,74 @@ public class Editscreen extends AppCompatActivity {
                     noServerFound();
                 }
             }
+        }
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            case R.id.tab_close:
+                editscreenBinding.nextSave.magicToolsLayout.setVisibility(View.GONE);
+                break;
+            case R.id.comment:
+                startActivity(new Intent(Editscreen.this, FeedBack.class).putExtra("INTENT_FROM", "EDITOR"));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                break;
+            case R.id.enhance:
+                editscreenBinding.nextSave.magicToolsLayout.setVisibility(View.GONE);
+
+                break;
+            case R.id.remove_bg:
+                editscreenBinding.nextSave.magicToolsLayout.setVisibility(View.GONE);
+                startActivity(new Intent(Editscreen.this, BackgroundChanger.class).putExtra("TITLE", getString(R.string.remove_bg)).putExtra("PRO_TAG", getString(R.string.remove_pro_bg)).putExtra("PICTURE", pictureType));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                break;
+            case R.id.cartoon:
+                editscreenBinding.nextSave.magicToolsLayout.setVisibility(View.GONE);
+                mainActivity.globalBitmap = savePhotoFrame();
+                startActivity(new Intent(Editscreen.this, CartoonSelfi.class).putExtra("TITLE", getString(R.string.cartton)).putExtra("PRO_TAG", getString(R.string.pro_cartoon)).putExtra("PICTURE", pictureType));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                break;
+            case R.id.descratch:
+                editscreenBinding.nextSave.magicToolsLayout.setVisibility(View.GONE);
+                break;
+            case R.id.erase:
+                editscreenBinding.nextSave.magicToolsLayout.setVisibility(View.GONE);
+                mainActivity.globalBitmap = savePhotoFrame();
+                startActivity(new Intent(Editscreen.this, RemoveObject.class).putExtra("PICTURE", pictureType));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                break;
+            case R.id.lens_blur:
+                editscreenBinding.nextSave.magicToolsLayout.setVisibility(View.GONE);
+                break;
+            case R.id.colorize:
+                editscreenBinding.nextSave.magicToolsLayout.setVisibility(View.GONE);
+                break;
+            case R.id.brighten:
+                editscreenBinding.nextSave.magicToolsLayout.setVisibility(View.GONE);
+                break;
+            case R.id.dehaze:
+                editscreenBinding.nextSave.magicToolsLayout.setVisibility(View.GONE);
+                break;
+
+
+        }
+    }
+
+    private void checkIapFlag() {
+        if (RemoteConfig.getRemoteConfig().getEnableIAPflag() != null && RemoteConfig.getRemoteConfig().getEnableIAPflag().equals("true")) {
+            editscreenBinding.nextSave.xCard.setPadding(5, 5, 30, 5);
+            editscreenBinding.nextSave.proLayout.setVisibility(View.VISIBLE);
+            editscreenBinding.nextSave.pro3X.setVisibility(View.VISIBLE);
+            iapFlag = true;
+
+        } else {
+            iapFlag = false;
+            editscreenBinding.nextSave.xCard.setPadding(5, 5, 5, 5);
+            editscreenBinding.nextSave.proLayout.setVisibility(View.GONE);
+            editscreenBinding.nextSave.pro3X.setVisibility(View.GONE);
         }
     }
 }

@@ -50,9 +50,7 @@ public class CommonMethods {
     public void loadNextNativeAdFlor(Context context, FrameLayout frameLayout) {
         if (context != null && frameLayout != null) {
 
-            adUnitIds = new String[]{context.getString(R.string.native_high),
-                    context.getString(R.string.native_mid),
-                    context.getString(R.string.native_all)};
+            adUnitIds = new String[]{context.getString(R.string.native_high), context.getString(R.string.native_mid), context.getString(R.string.native_all)};
             String adUnitId = adUnitIds[currentAdIndex];
             AdLoader.Builder builder = new AdLoader.Builder(context, adUnitId);
             builder.forNativeAd(new com.google.android.gms.ads.nativead.NativeAd.OnNativeAdLoadedListener() {
@@ -254,8 +252,7 @@ public class CommonMethods {
             } else if (splashInstance.interstitialAdAllFlor != null) {
                 splashInstance.interstitialAdAllFlor.show(activity);
             } else {
-                splashInstance.loadGoogleAdHighFlor();
-                splashInstance.loadGoogleAdMidFlor();
+
                 splashInstance.loadGoogleAdAllFlor();
             }
         }
@@ -263,5 +260,25 @@ public class CommonMethods {
 
     public void disableAds() {
 
+    }
+
+    public boolean displayInterstitialAd(Activity activity, Context context) {
+        boolean adloaded = false;
+        if (splashInstance != null) {
+            if (splashInstance.interstitialAdHighFlor != null) {
+                adloaded = true;
+                splashInstance.interstitialAdHighFlor.show(activity);
+            } else if (splashInstance.interstitialAdMidFlor != null) {
+                adloaded = true;
+                splashInstance.interstitialAdMidFlor.show(activity);
+            } else if (splashInstance.interstitialAdAllFlor != null) {
+                adloaded = true;
+                splashInstance.interstitialAdAllFlor.show(activity);
+            } else {
+                splashInstance.loadGoogleAdAllFlor();
+                adloaded = true;
+            }
+        }
+        return adloaded;
     }
 }

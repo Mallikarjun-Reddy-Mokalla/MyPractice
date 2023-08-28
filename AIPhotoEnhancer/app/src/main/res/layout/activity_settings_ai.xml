@@ -410,8 +410,5 @@
 
     </RelativeLayout>
 
-    <include
-        android:id="@+id/bottom_rate_sheet"
-        layout="@layout/rate_us" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

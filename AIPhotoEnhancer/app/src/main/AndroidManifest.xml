@@ -32,6 +32,7 @@
         android:required="true" />
 
     <application
+        android:name=".Utils.AppopenAD.MyAppOpen"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -42,6 +43,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AIPhotoEnhancer"
         tools:targetApi="31">
+        <activity
+            android:name=".UpdateApp"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".Editscreen"
             android:exported="false">

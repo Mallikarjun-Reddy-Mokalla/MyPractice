@@ -8,6 +8,7 @@ import static java.lang.System.out;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -31,6 +32,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aapthitech.android.developers.BackgroundChanger;
 import com.aapthitech.android.developers.Data.RemoteConfig;
 import com.aapthitech.android.developers.Editscreen;
 import com.aapthitech.android.developers.IAP.PremiumScreen;
@@ -66,7 +68,8 @@ public class AIEditor extends AppCompatActivity {
     private SaveSheetDialogBinding saveSheetDialogBinding;
     private ServerNotFoundBinding serverNotFoundBinding;
     private Dialog loadingDialog, serverNotFoundDialog;
-    private String BASEURL = "https://toonifime.com/toonifyme";
+    //    private String BASEURL = "https://toonifime.com/toonifyme";
+    private String BASEURL = "";
     private String SUB_URL_NAME = "";
     private MultiTouchListener2 multiTouchListener2m;
     public static String LASTSAVEIMAGE;
@@ -88,6 +91,7 @@ public class AIEditor extends AppCompatActivity {
     }
 
     String pictureType;
+    boolean iapFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,9 +120,11 @@ public class AIEditor extends AppCompatActivity {
             aieditorBinding.proTagText.setText(proTag);
 
         }
+        showBannerAd();
+        checkIapFlag();
         assert titleText != null;
         pictureType = getIntent().getStringExtra("PICTURE");
-
+        if (pictureType != null) checkPictype(pictureType);
         if (titleText.equals(getString(R.string.enhance))) {
             SUB_URL_NAME = "/superres";
         }
@@ -166,15 +172,37 @@ public class AIEditor extends AppCompatActivity {
             public void onClick(View v) {
                 if (pictureType != null) {
                     if (pictureType.equals("DemoImages")) {
-                        aieditorBinding.nextLayEdit.userImageBCSave.setVisibility(View.VISIBLE);
-//                        aieditorBinding.nextLayEdit.userImageBCSave.setImageDrawable(getDrawable(R.drawable.remove_before_after));
-                        aieditorBinding.nextLayEdit.userImageBCSave.setImageBitmap(mainActivity.globalBitmap);
+                        if (showInterstitialAd()) {
+                            aieditorBinding.nextLayEdit.userImageBCSave.setVisibility(View.VISIBLE);
+                            aieditorBinding.nextLayEdit.userImageBCSave.setImageBitmap(mainActivity.globalBitmap);
 
+                        } else {
+                            aieditorBinding.nextLayEdit.userImageBCSave.setVisibility(View.VISIBLE);
+                            aieditorBinding.nextLayEdit.userImageBCSave.setImageBitmap(mainActivity.globalBitmap);
+
+                        }
                     } else {
-                        imgEnhance();
-
+                        if (showInterstitialAd()) {
+                            imgEnhance();
+                        } else {
+                            imgEnhance();
+                        }
                     }
                 }
+                aieditorBinding.nextLayEdit.proLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(AIEditor.this, PremiumScreen.class).putExtra("PRO_FROM", "AIEDITOR"));
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    }
+                });
+                aieditorBinding.nextLayEdit.pro3X.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(AIEditor.this, PremiumScreen.class).putExtra("PRO_FROM", "AIEDITOR"));
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    }
+                });
                 aieditorBinding.appBarLay.setVisibility(View.GONE);
                 aieditorBinding.nextLayEdit.nextLayLoad.setVisibility(View.VISIBLE);
             }
@@ -190,14 +218,15 @@ public class AIEditor extends AppCompatActivity {
         aieditorBinding.nextLayEdit.cartoon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AIEditor.this, CartoonSelfi.class)
-                        .putExtra("TITLE", getString(R.string.cartton)).putExtra("PRO_TAG", getString(R.string.pro_cartoon)).putExtra("PICTURE", pictureType));
+                mainActivity.globalBitmap = savePhotoFrame();
+                startActivity(new Intent(AIEditor.this, CartoonSelfi.class).putExtra("TITLE", getString(R.string.cartton)).putExtra("PRO_TAG", getString(R.string.pro_cartoon)).putExtra("PICTURE", pictureType));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
         aieditorBinding.nextLayEdit.erase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mainActivity.globalBitmap = savePhotoFrame();
                 startActivity(new Intent(AIEditor.this, RemoveObject.class).putExtra("PICTURE", pictureType));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -205,13 +234,17 @@ public class AIEditor extends AppCompatActivity {
         aieditorBinding.nextLayEdit.removeBg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AIEditor.this, AIEditor.class).putExtra("TITLE", getString(R.string.enhance_title)).putExtra("PRO_TAG", getString(R.string.pro_enhance)).putExtra("PICTURE", pictureType));
+                mainActivity.globalBitmap = savePhotoFrame();
+
+                startActivity(new Intent(AIEditor.this, BackgroundChanger.class).putExtra("TITLE", getString(R.string.remove_bg)).putExtra("PRO_TAG", getString(R.string.remove_pro_bg)).putExtra("PICTURE", pictureType));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
         aieditorBinding.nextLayEdit.lensBlur.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mainActivity.globalBitmap = savePhotoFrame();
+
                 startActivity(new Intent(AIEditor.this, Editscreen.class).putExtra("TITLE", getString(R.string.lens_blur)).putExtra("PRO_TAG", getString(R.string.pro_lens)).putExtra("PICTURE", pictureType));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -219,6 +252,8 @@ public class AIEditor extends AppCompatActivity {
         aieditorBinding.nextLayEdit.colorize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mainActivity.globalBitmap = savePhotoFrame();
+
                 startActivity(new Intent(AIEditor.this, Editscreen.class).putExtra("TITLE", getString(R.string.colorize)).putExtra("PRO_TAG", getString(R.string.pro_colorize)).putExtra("PICTURE", pictureType));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -226,6 +261,8 @@ public class AIEditor extends AppCompatActivity {
         aieditorBinding.nextLayEdit.brighten.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mainActivity.globalBitmap = savePhotoFrame();
+
                 startActivity(new Intent(AIEditor.this, Editscreen.class).putExtra("TITLE", getString(R.string.brighten)).putExtra("PRO_TAG", getString(R.string.pro_brighten)).putExtra("PICTURE", pictureType));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -233,6 +270,8 @@ public class AIEditor extends AppCompatActivity {
         aieditorBinding.nextLayEdit.dehaze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mainActivity.globalBitmap = savePhotoFrame();
+
                 startActivity(new Intent(AIEditor.this, Editscreen.class).putExtra("TITLE", getString(R.string.dehaze)).putExtra("PRO_TAG", getString(R.string.pro_dehaze)).putExtra("PICTURE", pictureType));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -240,21 +279,37 @@ public class AIEditor extends AppCompatActivity {
         aieditorBinding.nextLayEdit.descratch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AIEditor.this, Editscreen.class)
-                        .putExtra("TITLE", getString(R.string.descratch)).putExtra("PRO_TAG", getString(R.string.pro_descratch)).putExtra("PICTURE", pictureType));
+                mainActivity.globalBitmap = savePhotoFrame();
+
+                startActivity(new Intent(AIEditor.this, Editscreen.class).putExtra("TITLE", getString(R.string.descratch)).putExtra("PRO_TAG", getString(R.string.pro_descratch)).putExtra("PICTURE", pictureType));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
-        if (RemoteConfig.getRemoteConfig() != null) {
-            if (RemoteConfig.getRemoteConfig().getShowbannerAd() != null) {
-                if (RemoteConfig.getRemoteConfig().getShowbannerAd().equals("true")) {
-                    commonMethods.loadBannerAd(aieditorBinding.nextLayEdit.bannerEraser, AIEditor.this);
+        aieditorBinding.nextLayEdit.comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AIEditor.this, FeedBack.class).putExtra("INTENT_FROM", "AIEDITOR"));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
-                }
             }
+        });
+
+
+    }
+
+    private void checkIapFlag() {
+        if (RemoteConfig.getRemoteConfig().getEnableIAPflag() != null && RemoteConfig.getRemoteConfig().getEnableIAPflag().equals("true")) {
+            aieditorBinding.nextLayEdit.xCard.setPadding(5, 5, 30, 5);
+            aieditorBinding.nextLayEdit.proLayout.setVisibility(View.VISIBLE);
+            aieditorBinding.nextLayEdit.pro3X.setVisibility(View.VISIBLE);
+            iapFlag = true;
+
+        } else {
+            iapFlag = false;
+            aieditorBinding.nextLayEdit.xCard.setPadding(5, 5, 5, 5);
+            aieditorBinding.nextLayEdit.proLayout.setVisibility(View.GONE);
+            aieditorBinding.nextLayEdit.pro3X.setVisibility(View.GONE);
         }
-
-
     }
 
     private void openSaveDialog() {
@@ -269,6 +324,9 @@ public class AIEditor extends AppCompatActivity {
 
         if (saveDialog != null) {
             saveDialog.show();
+        }
+        if (!iapFlag) {
+            saveSheetDialogBinding.proCardSave.setVisibility(View.GONE);
         }
         saveSheetDialogBinding.stillExit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -287,15 +345,23 @@ public class AIEditor extends AppCompatActivity {
         saveSheetDialogBinding.saveAdsCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (saveDialog != null) {
-                    if (saveDialog.isShowing()) {
-                        saveDialog.dismiss();
-                        new saveAndGoimag().execute(new Void[0]);
-                    } else {
-                        new saveAndGoimag().execute(new Void[0]);
+                if (saveDialog != null && saveDialog.isShowing()) {
 
-                    }
+                    saveDialog.dismiss();
+                    new saveAndGoimag().execute(new Void[0]);
+
+                } else {
+                    new saveAndGoimag().execute(new Void[0]);
                 }
+
+            }
+        });
+        saveSheetDialogBinding.proCardSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainActivity.globalBitmap = savePhotoFrame();
+                startActivity(new Intent(AIEditor.this, PremiumScreen.class).putExtra("PRO_FROM", "AIEDITOR"));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
 
@@ -456,6 +522,7 @@ public class AIEditor extends AppCompatActivity {
     private void openSaveActivity() {
         Intent intent = new Intent(this, SaveScreen.class);
         intent.putExtra("savedImage", savePath);
+        intent.putExtra("PICTURE", pictureType);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
@@ -514,6 +581,11 @@ public class AIEditor extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }*/
+            if (RemoteConfig.getRemoteConfig() != null) {
+                if (RemoteConfig.getRemoteConfig().getBaseUrl() != null) {
+                    BASEURL = RemoteConfig.getRemoteConfig().getBaseUrl();
+                }
+            }
 
             if (BASEURL != null || SUB_URL_NAME != null) {
 
@@ -666,4 +738,54 @@ public class AIEditor extends AppCompatActivity {
         }
     }
 
+    private boolean showInterstitialAd() {
+        boolean adLoaded = false;
+        if (RemoteConfig.getRemoteConfig() != null && RemoteConfig.getRemoteConfig().getShowInterstitial() != null && RemoteConfig.getRemoteConfig().getShowInterstitialapplyFilter() != null) {
+            if (RemoteConfig.getRemoteConfig().getShowInterstitial().equals("true") && RemoteConfig.getRemoteConfig().getShowInterstitialapplyFilter().equals("true")) {
+                adLoaded = commonMethods.displayInterstitialAd((Activity) AIEditor.this, AIEditor.this);
+            }
+        }
+        return adLoaded;
+    }
+
+
+    private void checkPictype(String pictureType) {
+        if (!pictureType.equals("DemoImages")) {
+            aieditorBinding.nextLayEdit.erase.setVisibility(View.GONE);
+            aieditorBinding.nextLayEdit.lensBlur.setVisibility(View.GONE);
+            aieditorBinding.nextLayEdit.brighten.setVisibility(View.GONE);
+            aieditorBinding.nextLayEdit.colorize.setVisibility(View.GONE);
+            aieditorBinding.nextLayEdit.descratch.setVisibility(View.GONE);
+            aieditorBinding.nextLayEdit.dehaze.setVisibility(View.GONE);
+            aieditorBinding.nextLayEdit.cartoon.setVisibility(View.VISIBLE);
+            aieditorBinding.nextLayEdit.enhance.setVisibility(View.VISIBLE);
+        } else {
+            aieditorBinding.nextLayEdit.erase.setVisibility(View.GONE);
+            aieditorBinding.nextLayEdit.lensBlur.setVisibility(View.GONE);
+            aieditorBinding.nextLayEdit.brighten.setVisibility(View.GONE);
+            aieditorBinding.nextLayEdit.colorize.setVisibility(View.GONE);
+            aieditorBinding.nextLayEdit.descratch.setVisibility(View.GONE);
+            aieditorBinding.nextLayEdit.dehaze.setVisibility(View.GONE);
+            aieditorBinding.nextLayEdit.cartoon.setVisibility(View.VISIBLE);
+            aieditorBinding.nextLayEdit.enhance.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void showBannerAd() {
+        if (RemoteConfig.getRemoteConfig() != null) {
+            if (RemoteConfig.getRemoteConfig().getShowbannerAd() != null) {
+                if (RemoteConfig.getRemoteConfig().getShowbannerAd().equals("true")) {
+                    commonMethods.loadBannerAd(aieditorBinding.nextLayEdit.bannerEraser, AIEditor.this);
+
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+    }
 }

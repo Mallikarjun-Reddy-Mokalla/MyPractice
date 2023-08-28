@@ -41,7 +41,76 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/tool_bar_lay"
-        android:layout_below="@+id/app_bar2" />
+        android:layout_below="@+id/app_bar2"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp"
+        android:visibility="visible" />
+
+    <RelativeLayout
+        android:id="@+id/user_image_ai"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tool_bar_lay"
+        android:layout_below="@+id/app_bar2"
+        android:layout_marginStart="10dp"
+        android:visibility="gone"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/view_lay"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="5dp">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="0.0dip"
+                android:layout_height="0.0dip"
+                android:layout_margin="5dp"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <RelativeLayout
+                    android:id="@+id/main_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <ImageView
+                        android:id="@+id/r_background_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitCenter" />
+
+                    <ImageView
+                        android:id="@+id/r_userImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY" />
+
+                    <ImageView
+                        android:id="@+id/compare_icon"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp" />
+
+                </RelativeLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/tool_bar_lay"
@@ -141,16 +210,16 @@
             android:id="@+id/save_magic_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible"
             android:layout_below="@+id/seeK_lay"
-            android:padding="15dp">
+            android:padding="15dp"
+            android:visibility="visible">
 
             <LinearLayout
                 android:id="@+id/magic_icon_lay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-
+android:visibility="gone"
                 android:background="@drawable/magic_gradient"
                 android:orientation="vertical"
                 android:padding="6dp">
@@ -189,8 +258,8 @@
             android:id="@+id/magic_tools_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
 
             <ImageView
@@ -198,16 +267,16 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_gravity="end"
-                android:padding="8dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginBottom="10dp"
+                android:padding="8dp"
                 android:src="@drawable/magic_r_tab_close" />
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:scrollbarSize="0dp"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:scrollbarSize="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"

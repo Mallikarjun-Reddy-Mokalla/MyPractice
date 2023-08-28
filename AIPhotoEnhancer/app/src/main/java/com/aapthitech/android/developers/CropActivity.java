@@ -10,7 +10,6 @@ import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -88,7 +87,7 @@ public class CropActivity extends AppCompatActivity {
             }
 
             openNewActivity(resutUri, selectedCard);
-
+/*
             if (mainActivity.modelFlag == 1) {
                 if (finalFlag == 1) {
                     try {
@@ -101,10 +100,10 @@ public class CropActivity extends AppCompatActivity {
                         e.getMessage();
                     }
                     openNewActivity(resutUri, selectedCard);
-                  /*  Intent intent2 = new Intent(CropActivity.this, AIEditor.class);
+                  *//*  Intent intent2 = new Intent(CropActivity.this, AIEditor.class);
                     retunIntent.putExtra("ROHIT", resutUri + "");
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    startActivity(intent2);*/
+                    startActivity(intent2);*//*
                     //finish();
                 } else if (finalFlag == 2) {
                     try {
@@ -117,10 +116,10 @@ public class CropActivity extends AppCompatActivity {
                         e.printStackTrace();
                         e.getMessage();
                     }
-                  /*  Intent intent2 = new Intent(CropActivity.this, AIEditor.class);
+                  *//*  Intent intent2 = new Intent(CropActivity.this, AIEditor.class);
                     retunIntent.putExtra("ROHIT", resutUri + "");
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    startActivity(intent2);*/
+                    startActivity(intent2);*//*
                     //finish();
                     openNewActivity(resutUri, selectedCard);
 
@@ -139,12 +138,12 @@ public class CropActivity extends AppCompatActivity {
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
-                             /*   Intent intent2 = new Intent(CropActivity.this, AIEditor.class);
+                             *//*   Intent intent2 = new Intent(CropActivity.this, AIEditor.class);
                                 retunIntent.putExtra("ROHIT", resutUri + "");
                                 retunIntent.putExtra("DEMOIMAGE", "FROMCROPACTIVITY");
                                 retunIntent.putExtra("CALLBACKPERSON", fromHomeDemoPerson);
                                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                                startActivity(intent2);*/
+                                startActivity(intent2);*//*
                                 //finish();
                                 openNewActivity(resutUri, selectedCard);
 
@@ -164,10 +163,10 @@ public class CropActivity extends AppCompatActivity {
                         e.printStackTrace();
                         e.getMessage();
                     }
-                  /*  Intent intent2 = new Intent(CropActivity.this, RemoveObject.class);
+                  *//*  Intent intent2 = new Intent(CropActivity.this, RemoveObject.class);
                     retunIntent.putExtra("ROHIT", resutUri + "");
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    startActivity(intent2);*/
+                    startActivity(intent2);*//*
                     //finish();
                 } else if (finalFlag == 2) {
                     try {
@@ -180,10 +179,10 @@ public class CropActivity extends AppCompatActivity {
                         e.printStackTrace();
                         e.getMessage();
                     }
-                 /*   Intent intent2 = new Intent(CropActivity.this, AIEditor.class);
+                 *//*   Intent intent2 = new Intent(CropActivity.this, AIEditor.class);
                     retunIntent.putExtra("ROHIT", resutUri + "");
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    startActivity(intent2);*/
+                    startActivity(intent2);*//*
                     //finish();
                 }
             } else if (mainActivity.modelFlag == 3) {
@@ -198,10 +197,10 @@ public class CropActivity extends AppCompatActivity {
                         e.printStackTrace();
                         e.getMessage();
                     }
-                  /*  Intent intent2 = new Intent(CropActivity.this, AIEditor.class);
+                  *//*  Intent intent2 = new Intent(CropActivity.this, AIEditor.class);
                     retunIntent.putExtra("ROHIT", resutUri + "");
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    startActivity(intent2);*/
+                    startActivity(intent2);*//*
                     //finish();
                 } else if (finalFlag == 2) {
                     try {
@@ -214,10 +213,10 @@ public class CropActivity extends AppCompatActivity {
                         e.printStackTrace();
                         e.getMessage();
                     }
-                   /* Intent intent2 = new Intent(CropActivity.this, AIEditor.class);
+                   *//* Intent intent2 = new Intent(CropActivity.this, AIEditor.class);
                     retunIntent.putExtra("ROHIT", resutUri + "");
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    startActivity(intent2);*/
+                    startActivity(intent2);*//*
                     //finish();
                 }
             } else if (mainActivity.modelFlag == 4) {
@@ -232,10 +231,10 @@ public class CropActivity extends AppCompatActivity {
                         e.printStackTrace();
                         e.getMessage();
                     }
-                    /*Intent intent2 = new Intent(CropActivity.this, AIEditor.class);
+                    *//*Intent intent2 = new Intent(CropActivity.this, AIEditor.class);
                     retunIntent.putExtra("ROHIT", resutUri + "");
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    startActivity(intent2);*/
+                    startActivity(intent2);*//*
                     //finish();
                 } else if (finalFlag == 2) {
                     try {
@@ -248,10 +247,10 @@ public class CropActivity extends AppCompatActivity {
                         e.printStackTrace();
                         e.getMessage();
                     }
-                  /*  Intent intent2 = new Intent(CropActivity.this, AIEditor.class);
+                  *//*  Intent intent2 = new Intent(CropActivity.this, AIEditor.class);
                     retunIntent.putExtra("ROHIT", resutUri + "");
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    startActivity(intent2);*/
+                    startActivity(intent2);*//*
                     //finish();
                 }
             } else if (mainActivity.modelFlag == 5) {
@@ -266,10 +265,10 @@ public class CropActivity extends AppCompatActivity {
                         e.printStackTrace();
                         e.getMessage();
                     }
-                   /* Intent intent2 = new Intent(CropActivity.this, AIEditor.class);
+                   *//* Intent intent2 = new Intent(CropActivity.this, AIEditor.class);
                     retunIntent.putExtra("ROHIT", resutUri + "");
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    startActivity(intent2);*/
+                    startActivity(intent2);*//*
                     //finish();
                 } else if (finalFlag == 2) {
                     try {
@@ -282,10 +281,10 @@ public class CropActivity extends AppCompatActivity {
                         e.printStackTrace();
                         e.getMessage();
                     }
-                   /* Intent intent2 = new Intent(CropActivity.this, AIEditor.class);
+                   *//* Intent intent2 = new Intent(CropActivity.this, AIEditor.class);
                     retunIntent.putExtra("ROHIT", resutUri + "");
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    startActivity(intent2);*/
+                    startActivity(intent2);*//*
                     //finish();
                 } else {
                     Intent intent = getIntent();
@@ -302,18 +301,18 @@ public class CropActivity extends AppCompatActivity {
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
-                          /*      Intent intent2 = new Intent(CropActivity.this, AIEditor.class);
+                          *//*      Intent intent2 = new Intent(CropActivity.this, AIEditor.class);
                                 retunIntent.putExtra("ROHIT", resutUri + "");
                                 retunIntent.putExtra("DEMOIMAGE", "FROMCROPACTIVITY");
                                 retunIntent.putExtra("CALLBACKPERSON", fromHomeDemoPerson);
                                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                                startActivity(intent2);*/
+                                startActivity(intent2);*//*
                                 //finish();
                             }
                         }
                     }
                 }
-            }
+            }*/
 
         } else if (resultCode == UCrop.RESULT_ERROR) {
             final Throwable crpoError = UCrop.getError(data);

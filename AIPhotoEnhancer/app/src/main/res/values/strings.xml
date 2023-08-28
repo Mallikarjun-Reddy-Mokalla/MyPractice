@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">AI Photo Enhancer</string>
+
     <string name="pro">PRO</string>
     <string name="ai_photo">AI Photo</string>
     <string name="remove_object">Remove Object</string>
@@ -71,4 +72,6 @@
     <!--END OF TEST ADS -->
     <string name="bottom_sheet_behavior">com.google.android.material.bottomsheet.BottomSheetBehavior</string>
     <string name="you_can_cancel_your_subcription_any_time">You can cancel your subcription any time</string>
+    <string name="update">Update</string>
+    <string name="please_update_the_app_for_better_experience">Please Update the App for Better Experience</string>
 </resources>

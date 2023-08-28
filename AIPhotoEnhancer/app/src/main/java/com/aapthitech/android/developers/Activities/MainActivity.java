@@ -377,8 +377,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (exitDialog != null) {
                     if (exitDialog.isShowing()) {
                         exitDialog.dismiss();
-
-
                     }
                 }
             }

@@ -36,16 +36,10 @@ android {
     }
 
     applicationVariants.all { variant ->
-        // Customize APK file name for release build type
-
         variant.outputs.all {
-            outputFileName = "AIEnchanser.apk"
+            def versionName = variant.versionName.replace(" ", "_") // Replace spaces with underscores
+            outputFileName = "AIEnchanser_${versionName}.apk"
         }
-
-
-        // Customize APK file name for other build types or flavors as needed
-        // Replace 'flavorName' with the actual flavor name
-        // For example, if you have a flavor named 'demo', you can use: variant.flavors.demo.versionName
     }
 }
 

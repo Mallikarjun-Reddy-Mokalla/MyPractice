@@ -6,6 +6,7 @@ import static com.aapthitech.android.developers.Data.CommonMethods.commonMethods
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,7 +18,7 @@ import com.aapthitech.android.developers.Activities.AIEditor;
 import com.aapthitech.android.developers.Activities.CartoonSelfi;
 import com.aapthitech.android.developers.Activities.MainActivity;
 import com.aapthitech.android.developers.Activities.RemoveObject;
-import com.aapthitech.android.developers.Data.CommonMethods;
+import com.aapthitech.android.developers.Data.RemoteConfig;
 import com.aapthitech.android.developers.databinding.ActivitySaveScreenBinding;
 
 import java.io.File;
@@ -37,6 +38,7 @@ public class SaveScreen extends AppCompatActivity {
     Uri imgUri = null;
     private String filename;
     String finalSavedImagePath;
+    String pictureType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +52,11 @@ public class SaveScreen extends AppCompatActivity {
         commonMethods.loadNextNativeAdFlor(SaveScreen.this, saveScreenBinding.nativeAdSave);
         savePath = getIntent().getStringExtra("savedImage");
         finalSavedImagePath = savePath;
-
+        showInterstialAdOnSave();
+        pictureType = getIntent().getStringExtra("PICTURE");
 
         String imagePath = getIntent().getStringExtra("SAVED_IMG");
-
+        checkPictype(pictureType);
         if (imagePath != null) {
             File imageFile = new File(imagePath);
 
@@ -129,6 +132,45 @@ public class SaveScreen extends AppCompatActivity {
         sharingIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
         sharingIntent.putExtra(Intent.EXTRA_STREAM, imgUri);
         startActivity(sharingIntent);
+    }
+
+    private void showInterstialAdOnSave() {
+        boolean adLoaded = false;
+        if (RemoteConfig.getRemoteConfig() != null && RemoteConfig.getRemoteConfig().getShowInterstitial() != null && RemoteConfig.getRemoteConfig().getShowInterstitialOnSave() != null) {
+            if (RemoteConfig.getRemoteConfig().getShowInterstitial().equals("true") && RemoteConfig.getRemoteConfig().getShowInterstitialOnSave().equals("true")) {
+                commonMethods.showGoogleAd((Activity) SaveScreen.this, SaveScreen.this);
+            }
+        }
+        ;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+    }
+
+    private void checkPictype(String pictureType) {
+        if (!pictureType.equals("DemoImages")) {
+            saveScreenBinding.erase.setVisibility(View.GONE);
+            saveScreenBinding.lensBlur.setVisibility(View.GONE);
+            saveScreenBinding.brighten.setVisibility(View.GONE);
+            saveScreenBinding.colorize.setVisibility(View.GONE);
+            saveScreenBinding.descratchSave.setVisibility(View.GONE);
+            saveScreenBinding.dehaze.setVisibility(View.GONE);
+            saveScreenBinding.cartoonSave.setVisibility(View.VISIBLE);
+            saveScreenBinding.enhance.setVisibility(View.VISIBLE);
+        } else {
+            saveScreenBinding.erase.setVisibility(View.GONE);
+            saveScreenBinding.lensBlur.setVisibility(View.GONE);
+            saveScreenBinding.brighten.setVisibility(View.GONE);
+            saveScreenBinding.colorize.setVisibility(View.GONE);
+            saveScreenBinding.descratchSave.setVisibility(View.GONE);
+            saveScreenBinding.dehaze.setVisibility(View.GONE);
+            saveScreenBinding.cartoonSave.setVisibility(View.VISIBLE);
+            saveScreenBinding.enhance.setVisibility(View.VISIBLE);
+        }
     }
 
 }

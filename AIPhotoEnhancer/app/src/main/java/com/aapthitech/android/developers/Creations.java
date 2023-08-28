@@ -3,7 +3,6 @@ package com.aapthitech.android.developers;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,11 +11,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-
 import com.aapthitech.android.developers.Activities.MainActivity;
 import com.aapthitech.android.developers.Adapters.GalleryAdapter;
 import com.aapthitech.android.developers.databinding.ActivityCreationsBinding;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,6 +71,7 @@ public class Creations extends AppCompatActivity {
 public static Creations getInstance(){
         return creationsInstance;
 }
+
     private void setImageAdapter(final ArrayList<String> imageFilesList) {
         GalleryAdapter creationsAdapter = new GalleryAdapter(imageFilesList, Creations.this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 2, RecyclerView.VERTICAL, false);
